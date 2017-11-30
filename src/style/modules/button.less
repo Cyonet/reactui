@@ -1,0 +1,129 @@
+.btn{
+  display: inline-block;
+  margin-bottom: 0;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  user-select: none;
+  width: 100px;
+  transition: color 0.3s linear, background-color 0.3s linear, border 0.3s linear;
+  &-radius{
+    .button-raduis(@btn-border-radius);
+  }
+
+  &,
+  &:active,
+  &:focus {
+    outline: 0;
+  }
+
+  &:not([disabled]):hover {
+    text-decoration: none;
+  }
+
+  &:not([disabled]):active {
+    outline: 0;
+    transition: none;
+  }
+
+  &.disabled,
+  &[disabled] {
+    cursor: not-allowed;
+    > * {
+      pointer-events: none;
+    }
+  }
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    &,
+    &:hover,
+    &:focus,
+    &:active,
+    &.active {
+      .button-color(@btn-disable-color; @btn-disable-bg; @btn-disable-border);
+    }
+  }
+}
+
+.btn-size{
+  &-default{
+    .button-size(@btn-padding-base, 14px, 30px);
+  }
+  &-large{
+    .button-size(@btn-padding-base, 20px, 50px);
+  }
+
+  &-middle{
+    .button-size(@btn-padding-base, 16px, 40px);
+  }
+  &-small{
+    .button-size(@btn-padding-base, 12px,25px);
+  }
+  &-xsmall{
+    .button-size(@btn-padding-base, 12px,20px);
+  }
+}
+
+.btn-type{
+  &-primary{
+    .button-fatory(@white-color, @primary-color, @primary-color);
+  }
+  &-success{
+    .button-fatory(@white-color, @success-color, @success-color);
+  }
+  &-warning{
+    .button-fatory(@white-color, @warning-color, @warning-color);
+  }
+  &-danger{
+    .button-fatory(@white-color, @danger-color, @danger-color);
+  }
+}
+
+.btn-text{
+  width: auto;
+  .button-size(@btn-padding-base, 12px, 25px);
+}
+
+
+.btn-clicked{
+  position: relative;
+  &:after{
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    bottom: -1px;
+    right: -1px;
+    border-radius: inherit;
+    border: 1px solid transparent;
+    border-color: inherit;
+    opacity: 0.6;
+    animation: buttonEffect .4s;
+    display: block;
+  }
+}
+@keyframes buttonEffect {
+  to {
+    opacity: 0;
+    top: -6px;
+    left: -6px;
+    bottom: -6px;
+    right: -6px;
+    border-width: 6px;
+  }
+}
+
+.loading{
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 4px;
+  width: 14px;
+  height: 14px;
+  //background-image: url('../../styles/images/loading.gif');
+  background-size: contain;
+}

@@ -1,0 +1,49 @@
+
+.btn-raduis(@border-radius){
+  border-radius: @border-radius;
+}
+
+.button-size(@padding; @font-size; @hight) {
+  padding: @padding;
+  font-size: @font-size;
+  line-height: (@hight - 2);
+}
+
+.button-color(@color; @background; @border) {
+  color: @color;
+  background-color: @background;
+  border-color: @border;
+}
+
+.button-variant(@color; @background; @border) {
+  .button-color(@color; @background; @border);
+  &.loaded,
+  &.loaded:hover
+  {
+    .button-color(shade(@color, 10%); shade(@background, 10%); shade(@background, 10%));
+  }
+
+  &:hover
+  &:active,
+  &.active {
+    .button-color(shade(@color, 5%); shade(@background, 5%); shade(@background, 5%));
+  }
+}
+
+.button-text(@color){
+  &.text{
+    .button-color(@color, transparent, transparent);
+    &:hover
+    &:active,
+    &.active {
+      .button-color(shade(@color, 10%), transparent, transparent);
+    }
+  }
+}
+.button-fatory(@color, @background, @border){
+  .button-variant(@color, @background, @border);
+  &.ghost{
+    .button-variant(@background, @color-white, @background);
+  }
+  .button-text(@background);
+}

@@ -1,0 +1,70 @@
+const webpack = require('webpack');
+const path = require('path');
+const merge = require('webpack-merge');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+const baseConf = require('./webpack.base.conf');
+
+module.exprots = merge(baseConf, {
+    devtool: '#source-map',
+    plugins: [
+        // https://github.com/glenjamin/webpack-hot-middleware#installation--usage
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false
+            },
+            sourceMap: true
+        }),
+        new webpack.HashedModuleIdsPlugin(),
+        new webpack.NamedChunksPlugin(function(chunk){
+           if (chunk.name) {
+             return chunk.name;
+           }
+           return chunk.mapModules(function (m) {
+               path.relative(m.context, m.request)
+           }).join("_");
+        }),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'vendor',
+            minChunks: function (module) {
+                // any required modules inside node_modules are extracted to vendor
+                return (
+                    module.resource &&
+                    /\.js$/.test(module.resource) &&
+                    module.resource.indexOf(
+                        path.join(__dirname, '../node_modules')
+                    ) === 0
+                )
+            }
+        }),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'manifest',
+            chunks: ['vendor']
+        }),
+        new ExtractTextPlugin('css/[name]-[contenthash].css'),
+        // copy custom static assets
+        new CopyWebpackPlugin([
+            {
+                from: path.resolve(__dirname, '../static'),
+                to: path.resolve(__dirname, '../dist'),
+                ignore: ['.*']
+            }
+        ]),
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            template: 'index.html',
+            inject: true,
+            minify: {
+                removeComments: true,
+                collapseWhitespace: true,
+                removeAttributeQuotes: true
+                // more options:
+                // https://github.com/kangax/html-minifier#options-quick-reference
+            },
+            // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+            chunksSortMode: 'dependency'
+        })
+    ]
+});
