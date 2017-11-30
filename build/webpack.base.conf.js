@@ -12,7 +12,7 @@ function outputPath(output) {
 
 module.exports = {
     entry: {
-        main:resolve('src/index.js')
+        main:resolve('src/index.jsx')
     },
     output: {
       path: resolve("dist"),
@@ -25,13 +25,13 @@ module.exports = {
   },
     module: {
         rules: [
-            {
-                test: /\.(js|jsx)$/,
-                loader: 'eslint-loader',
-                enforce: 'pre',
-                exclude: /node_modules/,
-                include: [resolve('src'), resolve('test')]
-            },
+            // {
+            //     test: /\.(js|jsx)$/,
+            //     loader: 'eslint-loader',
+            //     enforce: 'pre',
+            //     exclude: /node_modules/,
+            //     include: [resolve('src'), resolve('test')]
+            // },
             {
                 test: /\.(js|jsx)$/,
                 loader: 'babel-loader',
