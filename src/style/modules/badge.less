@@ -1,0 +1,52 @@
+.badge{
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+  vertical-align: middle;
+  &-count{
+    position: absolute;
+    transform: translateX(-50%);
+    top: -10px;
+    height: 20px;
+    color:@white-color;
+    border-radius: 10px;
+    min-width: 20px;
+    line-height: 20px;
+    text-align: center;
+    padding: 0 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    transform-origin: -10% center;
+  }
+  &-dot{
+    position: absolute;
+    transform: translateX(-50%);
+    transform-origin: 0 center;
+    top: -4px;
+    height: 8px;
+    width: 8px;
+    border-radius: 100%;
+    z-index: 10;
+    box-shadow: 0 0 0 1px @white-color;
+  }
+}
+.badge-not-Warp{
+  .badge-count {
+    top: auto;
+    display: block;
+    position: relative;
+    transform: none!important;
+  }
+}
+.badge-primary{
+  background-color: @primary-color;
+}
+.badge-success{
+  background-color: @success-color;
+}
+.badge-warning{
+  background-color: @warning-color;
+}
+.badge-danger{
+  background-color: @danger-color;
+}
