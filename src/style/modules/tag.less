@@ -1,0 +1,52 @@
+.tag {
+  display: inline-block;
+  line-height: 18px;
+  height: 20px;
+  font-size: 14px;
+  padding: 0 8px;
+  color: #333;
+  border: 1px solid transparent;
+  transition: all .3s cubic-bezier(.78,.14,.15,.86);
+  opacity: 1;
+  cursor: pointer;
+  white-space: nowrap;
+  margin: 0 8px 5px 0;
+  user-select: none;
+  &:last-child{
+    margin-right: 0;
+  }
+  &.tag-close{
+    padding-right: 16px;
+    position: relative;
+    .tag-close-icon{
+      position: absolute;
+      right: 0;
+      top:50%;
+      font-size: 12px;
+      line-height: 1;
+      transform: scale(0.8) translateY(-50%);
+      &:hover{
+        color: shade(@primary-color, 10%);
+      }
+      transition: all 0.3s;
+    }
+  }
+}
+
+@list: primary, success, warning, danger;
+.loop(@len) when (@len>0) {
+  @type: extract(@list, @len);
+  @color: '@{type}-color';
+  .tag-@{type} {
+     background-color: @@color;
+     color: @white-color;
+     border-color: @@color;
+  }
+  .tag-@{type}-ghost {
+    background-color: transparent;
+    color: @@color;
+    border-color:  @@color;
+  }
+  .loop((@len - 1));
+}
+.loop(length(@list));

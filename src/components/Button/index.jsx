@@ -22,7 +22,7 @@ class Button extends React.Component {
 
     handleClick = (e, double) => {
       e.preventDefault();
-      if (this.props.pop) {
+      if (this.props.stop) {
         // 阻止事件传播
         e.stopPropagation();
       }
@@ -109,7 +109,7 @@ Button.propTypes = {
   onDoubleClick: PropTypes.func,
   onClick: PropTypes.func,
   width: PropTypes.number,
-  pop: PropTypes.bool,
+  stop: PropTypes.bool,
 };
 
 Button.defaultProps = {
@@ -121,7 +121,7 @@ Button.defaultProps = {
   icon: '',
   text: false,
   radius: true,
-  pop: false,
+  stop: false,
   children: null,
   className: '',
   width: 0,

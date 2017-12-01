@@ -5,7 +5,7 @@ const baseConf = require('./webpack.base.conf');
 const CSSplitWebpackPlugin = require('css-split-webpack-plugin').default;
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
-const cssnano = require('cssnano');
+const autoprefixer = require('autoprefixer');
 const util = require('./util');
 // const hotClient = require('webpack-hot-middleware/client?noInfo=true&reload=true')
 
@@ -25,7 +25,7 @@ module.exports = merge(baseConf, {
               ident: 'postcss',
               plugins: (loader) => {
                 return [
-                  cssnano()
+                  autoprefixer()
                 ];
               }
             }

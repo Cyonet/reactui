@@ -1,0 +1,47 @@
+@prefix: @row;
+
+.@{prefix},.@{prefix}-flex{
+  box-sizing: border-box;
+  margin-left: 0;
+  margin-right: 0;
+}
+.@{prefix}{
+  position: relative;
+  display: block;
+  margin-left: 0;
+  margin-right: 0;
+  height: auto;
+  zoom: 1;
+  .clearfix;
+}
+.@{prefix}-flex{
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  &:before,
+  &:after {
+    display: flex;
+  }
+}
+//flex justify
+@justifies: start, end, center, space-around, space-between;
+@realJustifies: flex-start, flex-end, center, space-around, space-between;
+.loopJustifies(@len) when (@len > 0) {
+  @justify:extract(@justifies, @len);
+  .@{prefix}-@{justify}{
+    justify-content: extract(@realJustifies, @len);
+  }
+  .loopJustifies((@len - 1));
+}
+.loopJustifies(length(@justifies));
+
+@align:top, middle, bottom;
+@realAlign: flex-start, center, flex-end;
+.loopAlign(@len) when (@len > 0) {
+  @a:extract(@align, @len);
+  .@{prefix}-@{a}{
+    align-items: extract(@realAlign, @len);
+  }
+  .loopAlign((@len - 1));
+}
+.loopAlign(length(@align));

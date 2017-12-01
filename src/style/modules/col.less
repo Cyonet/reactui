@@ -1,0 +1,54 @@
+@prefix: @col;
+
+.@{prefix}{
+  display: block;
+  float: left;
+  flex: 0 0 auto;
+}
+.@{prefix}-pull,.@{prefix}-push{
+  position: relative;
+}
+.generateGrid(@n,@type:~'', @i: @n) when (@i > 0) {
+  @width: (@i / @n);
+  .@{prefix}@{type}-@{i} {
+    width: percentage(@width);
+  }
+  .@{prefix}@{type}-offset-@{i} {
+    margin-left: percentage(@width);
+  }
+  .@{prefix}@{type}-pull-@{i}  {
+    right: percentage(@width);
+  }
+  .@{prefix}@{type}-push-@{i}  {
+    left: percentage(@width);
+  }
+  .generateGrid(@n, @type,(@i - 1));
+}
+//.generateGrid(@n,@type:~'', @i: 0) when (@i = 0) {
+//  .col@{type}-@{i} {
+//    display: none;
+//  }
+//  .col@{type}-offset-@{i} {
+//    margin-left: 0;
+//  }
+//  .col@{type}-pull-@{i}  {
+//    right: auto;
+//  }
+//  .col@{type}-push-@{i}  {
+//    left: auto;
+//  }
+//}
+
+.generateGrid(@gird-span);
+@media (max-width: @screen-sm-min) {
+  .generateGrid(@gird-span,-xs);
+}
+@media (min-width: @screen-sm-min) {
+  .generateGrid(@gird-span, -sm);
+}
+@media (min-width: @screen-md-min) {
+  .generateGrid(@gird-span, -md);
+}
+@media (min-width: @screen-lg-min) {
+  .generateGrid(@gird-span, -lg);
+}
