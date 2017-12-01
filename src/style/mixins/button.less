@@ -1,5 +1,5 @@
 
-.btn-raduis(@border-radius){
+.button-raduis(@border-radius){
   border-radius: @border-radius;
 }
 
@@ -43,7 +43,7 @@
 .button-fatory(@color, @background, @border){
   .button-variant(@color, @background, @border);
   &.ghost{
-    .button-variant(@background, @color-white, @background);
+    .button-variant(@background, @white-color, @background);
   }
   .button-text(@background);
 }

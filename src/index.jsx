@@ -1,6 +1,6 @@
 import React from 'react';
 import reactDOM from 'react-dom';
-import Button from './components/Button';
-import './style/index.less';
+import App from './App';
+import './style/style.less';
 
-reactDOM.render((<Button>测试</Button>), document.getElementById('root'));
+reactDOM.render(<App />, document.getElementById('root'));

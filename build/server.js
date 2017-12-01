@@ -45,7 +45,7 @@ app.use(require('connect-history-api-fallback')())
 app.use(devMiddleware)
 
 // serve pure static assets
-const staticPath = path.posix.join('/', 'static')
+const staticPath = path.posix.join('/', 'src/static')
 app.use(staticPath, express.static('./static'))
 
 const portfinder = require('portfinder')

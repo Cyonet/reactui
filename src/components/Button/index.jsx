@@ -126,7 +126,6 @@ Button.defaultProps = {
   className: '',
   width: 0,
   onDoubleClick: noop,
-  onClick: noop
+  onClick: noop,
 };
-
 export default Button;
