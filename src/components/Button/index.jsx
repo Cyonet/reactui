@@ -64,7 +64,7 @@ class Button extends React.Component {
         onClick,
         onDoubleClick,
         width,
-        pop,
+        stop,
         ...other
       } = this.props;
       const { clicked } = this.state;

@@ -29,5 +29,6 @@ module.exports = {
         'linebreak-style': 0,
         "classes": true,
         "jsx-a11y/aria-role": 0,
+        "max-len": ["error", 120]
     }
 }

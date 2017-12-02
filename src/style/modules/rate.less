@@ -1,0 +1,49 @@
+@prefix:rate;
+.@{prefix}{
+  display: inline-block;
+  list-style:none;
+  padding: 0;
+  &-item{
+    display: inline-block;
+    margin: 0 (@space-base / 2) 0 0;
+    padding: 0;
+    position: relative;
+    cursor: pointer;
+    transition: all .3s;
+    font-size: 26px;
+    line-height: 1em;
+    vertical-align: middle;
+    &:last-child{
+      margin-right: 0;
+    }
+    color: @color-gray;
+    &:hover{
+      color: @color-gray;
+      transform: scale(1.1);
+    }
+    .@{prefix}-half-area{
+      position: absolute;
+      top:0;
+      left: 0;
+      bottom: 0;
+      width: 50%;
+      font-size: 26px;
+      line-height: 1em;
+      overflow: hidden;
+    }
+    &.@{prefix}-full{
+      color: #FABA1D;
+    }
+    &.@{prefix}-zero{
+      color: @color-gray;
+    }
+    &.@{prefix}-half{
+      .@{prefix}-half-area{
+        color: #FABA1D;
+        &:before{
+          color: #FABA1D;
+        }
+      }
+    }
+  }
+}

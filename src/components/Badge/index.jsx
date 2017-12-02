@@ -28,11 +28,10 @@ function Badge(props) {
   return (
     <span className={classes}>
       {children}
-      {
-        ((dot || showZero) || badge) && (<sup className={badgeClass} title={badge}>{badge}</sup>) || null
-      }
+      {((dot && (badge || showZero)) && <sup className={badgeClass} title={badge}>{badge}</sup>) || null}
     </span>);
 }
+
 Badge.defaultProps = {
   overflowCount: 99,
   showZero: false,
@@ -41,6 +40,7 @@ Badge.defaultProps = {
   children: null,
   count: 0,
 };
+
 Badge.propTypes = {
   count: PropType.number,
   overflowCount: PropType.number,
