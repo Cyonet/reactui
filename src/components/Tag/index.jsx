@@ -52,19 +52,17 @@ Tag.defaultProps = {
   type: 'primary',
   closable: false,
   color: '',
-  onClick: noop,
   onClose: noop,
   style: {},
   className: '',
 };
 
 Tag.propTypes = {
-  type: PropTypes.oneOf(['primary', 'gray', 'success', 'warning', 'danger', 'orange']),
+  type: PropTypes.oneOf(['primary', 'success', 'warning', 'danger']),
   ghost: PropTypes.bool,
   children: PropTypes.node.isRequired,
   color: PropTypes.string,
   closable: PropTypes.bool,
-  onClick: PropTypes.func,
   onClose: PropTypes.func,
   className: PropTypes.string,
   style: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
