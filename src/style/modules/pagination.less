@@ -1,0 +1,80 @@
+@import "../../styles/vars";
+
+@size:25px;
+.pageContainer{
+  list-style-type: none;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+  // float: left;
+}
+.normal{
+  float: left;
+  border: 1px solid @border-color-default;
+  margin-right: 10px;
+  cursor: pointer;
+  height: @size;
+  width: @size;
+  text-align: center;
+  line-height: (@size - 2);
+  background:#fff;
+}
+.normal, .current{
+  &:hover{
+    border-color: @color-active;
+    color: @color-active;
+  }
+}
+.disabled{
+  border: 1px solid @border-color-default;
+  color: #d7d7d7;
+  &:hover{
+    border: 1px solid @border-color-default;
+    color: #d7d7d7;
+  }
+}
+.current{
+  float: left;
+  border: 1px solid @color-default;
+  margin-right: 10px;
+  cursor: pointer;
+  height: @size;
+  width: @size;
+  text-align: center;
+  line-height: @size;
+  color:@color-default;
+  background:#fff;
+}
+.goTo{
+  // float: left;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 12px;
+  color: @color-c555;
+  margin-left: 45px;
+  line-height: @size;
+}
+.pageInput{
+  width: 40px;
+  border: 1px solid #ddd;
+  outline: none;
+  margin: 0 10px;
+  text-align: center;
+  &:hover{
+    border: 1px solid #44C0FF;
+  }
+}
+.pageNum{
+  border: 1px solid @border-color-default;
+  background: #fff;
+  width: 40px;
+  margin: 0 10px;
+  text-align: center;
+  box-sizing: border-box;
+  height: 100%;
+  vertical-align: top;
+  &:hover{
+    border-color: @color-active;
+    color: @color-active;
+  }
+}

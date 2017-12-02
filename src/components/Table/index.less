@@ -1,0 +1,163 @@
+@import "../../styles/vars";
+.container {
+  position: relative;
+  width: 100%;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+  overflow: hidden;
+  table-layout: fixed;
+  &.bordered{
+      border-collapse: collapse;
+      box-sizing: border-box;
+      overflow: auto;
+     .thead, .tbody{
+       border: 1px solid @border-color;
+       border-bottom: none;
+       tr{
+         border-bottom: 1px solid @border-color;
+       }
+     }
+  }
+}
+
+.thead {
+  tr {
+    height: @header-height;
+    color: @font-color;
+    line-height: 1;
+    font-size: 13px;
+    background-color: @header-color-new;
+    th{
+      font-weight: normal;
+    }
+  }
+}
+.thead,.tbody{
+  .ellipsis{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .center{
+    text-align: center;
+  }
+  .left{
+    text-align: left;
+  }
+  .right{
+    text-align: right;
+  }
+}
+.tbody {
+  box-sizing: border-box;
+  font-size: 12px;
+  color: #222;
+  border: 1px solid #ddd;
+  border-top-width: 0;
+  .no-data{
+    height: 50px;
+    background-color: @color-white;
+    td{
+      text-align: center;
+      font-size: 18px;
+      color: @border-color-ddd;
+      font-weight: 300;
+      i{
+        margin-right: 6px;
+        font-size: 26px;
+        position: relative;
+        top: 2px;
+      }
+    }
+  }
+}
+.row {
+  span[name='setAdd']{
+    display:none;
+  }
+  padding: 10px 0;
+  //background-color: @tr-normal-bg;
+  transition: background-color 0.5s linear;
+  &:first-child {
+    border-top-width: 0;
+    span[name='setAdd']{
+      display:block;
+    }
+  }
+  &:hover {
+    background-color: darken(@tr-normal-bg, 3%);
+    span[name='setAdd']{
+      display:block;
+    }
+  }
+  &[disabled]{
+    background-color: @tr-disabled-bg;
+    &:hover {
+      background-color: darken(@tr-disabled-bg, 3%);
+    }
+  }
+  &[data-active="true"] {
+    background-color: @tr-active-bg;
+    &:hover {
+      background-color: darken(@tr-active-bg, 3%);
+    }
+  }
+  td{
+    height: 60px;
+  }
+}
+.selectAllBox {
+  margin-right: 5px;
+}
+
+.loaded, .mask {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  transition: all .3s;
+}
+
+.mask {
+  background-color: @font-color;
+  opacity: 0.2 ;
+}
+
+.loadBox {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  overflow: hidden;
+  box-sizing: border-box;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes loading{
+  from{
+    transform-origin:50% 50%;
+    transform:rotate(0deg)
+  }
+  to{
+    transform-origin:50% 50%;
+    transform:rotate(1turn)
+  }
+}
+.loader{
+  display: block;
+  margin: 0 auto;
+  position: relative;
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+  border: solid 2px transparent;
+  border-top-color: @color-default;
+  border-left-color: @color-default;
+  border-radius: 50%;
+  animation: loading 400ms linear infinite;
+}

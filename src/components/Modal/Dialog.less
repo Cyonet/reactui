@@ -1,0 +1,40 @@
+@import "../../styles/mixins";
+
+.dialog {
+  &-mask {
+    display: block;
+    .full(fixed);
+    background-color: rgba(55, 55, 55, .6);
+    height: 100%;
+    filter: alpha(opacity=50);
+    &&-hidden {
+      display: none;
+    }
+  }
+  &-body {
+    display: block;
+    outline: 0;
+    text-align: center;
+    .full(fixed);
+    &-hidden {
+      display: none;
+    }
+
+  }
+  &-vertical {
+    .dialog-wrap {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+    }
+  }
+  &-wrap {
+    display: inline-block;
+    margin: 0 auto;
+    vertical-align: middle;
+    background-color: #fff;
+    box-shadow: 0 0 15px 5px #555;
+  }
+}

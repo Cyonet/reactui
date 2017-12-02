@@ -1,0 +1,40 @@
+.comboWrapper{
+    width: 200px;
+    margin:auto;
+    position: relative;
+}
+.input{
+    outline: none;
+    padding: 0 6px;
+    height: 28px;
+    line-height: 28px;
+    font-size: 14px;
+}
+.inputBox{
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: all 0.2s linear;
+    &:hover,&.active{
+        border-color: #49a9ee;
+    }
+}
+.list{
+    max-height: 250px;
+    overflow: auto;
+    background: #fff;
+    box-shadow: 0 1px 6px rgba(0,0,0,.2);
+    position: absolute;
+    top: 105%;
+    width: 100%;
+    border-radius: 4px;
+}
+.listItem{
+    height: 32px;
+    padding: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #555;
+    &:hover,&.active{
+        background: #ecf6fd;
+    }
+}

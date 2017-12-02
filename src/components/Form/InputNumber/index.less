@@ -1,0 +1,81 @@
+@import "../../../styles/vars";
+.inputNumber{
+    display: inline-block;
+    .input{
+      display: inline-block;
+      width: auto;
+    }
+    button, input{
+      display: inline-block;
+      transition: all 0.2s linear;
+      border-radius: 0;
+    }
+    button{
+      width: 30px;
+      height: 30px;
+      padding: 0 3px;
+      border-left-width: 0;
+      font-size: 18px;
+      font-weight: bolder;
+      color: #555;
+      &:first-child{
+        border-left-width: 1px;
+        border-right-width: 0;
+      }
+      &, &:hover{
+        border-color: #d9d9d9;
+      }
+      &[disabled]{
+        background-color: @color-white;
+        cursor: default;
+        color:  #B0B0B0;
+      }
+
+
+    }
+    input{
+      width: 78px;
+      padding: 0 7px;
+    }
+  &.inline{
+    position: relative;
+    input{
+      padding-right: 20px;
+      width: 98px;
+    }
+    .handlerWarp{
+      position: absolute;
+      top:0;
+      right: 0;
+      bottom: 0;
+      width: 20px;
+      overflow: hidden;
+    }
+    .btnUp,.btnDown{
+      display: block;
+      cursor: pointer;
+      height: 50%;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: center;
+      border-left: 1px solid #B0B0B0;
+      transition: all 0.3s linear;
+      line-height: 12px;
+      &:hover{
+        color: @color-default;
+      }
+      &[disabled]{
+        cursor: default;
+        color: #B0B0B0;
+      }
+    }
+    .btnUp{
+      border-bottom: 1px solid #B0B0B0;
+    }
+    .btnDown{
+    }
+  }
+
+
+
+}
