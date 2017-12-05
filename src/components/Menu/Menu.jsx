@@ -7,9 +7,9 @@ class Menu extends React.Component {
     this.state = {};
   }
   renderMenuItem() {
-    const { inlineIndent } = this.props;
-    return `测试${inlineIndent}`;
+    return `测试`;
   }
+
   render() {
     const { mode } = this.props;
     const classes = classNames('menu', `menu-${mode}`);
@@ -25,10 +25,16 @@ class Menu extends React.Component {
 
 Menu.defaultProps = {
   mode: 'vertical',
-  inlineIndent: 24,
+  active: undefined,
+  openMenus: [],
+  accordion: false,
+  width: 240,
 };
 
 Menu.propTypes = {
-  mode: propType.oneOf(['vertical', 'horizontal', 'inline']),
-  inlineIndent: propType.number,
+  mode: propType.oneOf(['vertical', 'horizontal', 'inline']), // 模式
+  active: propType.oneOfType([propType.string, propType.number]), // 激活菜单
+  openMenus: propType.arrayOf(propType.oneOfType([propType.string, propType.number])), // 展开菜单
+  accordion: propType.bool, // 开启手风琴风格。只能展开一个
+  width: propType.number, // 宽度
 };

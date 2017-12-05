@@ -29,6 +29,9 @@ module.exports = {
         'linebreak-style': 0,
         "classes": true,
         "jsx-a11y/aria-role": 0,
+        "jsx-a11y/aria-props": 0,
+        "jsx-a11y/click-events-have-key-events": 0,
+        "jsx-a11y/role-supports-aria-props": 0,
         "max-len": ["error", 120],
         "no-plusplus": 0
     }
