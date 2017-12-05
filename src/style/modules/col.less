@@ -1,25 +1,25 @@
-@prefix: @col;
+@__prefix: @col;
 
-.@{prefix}{
+.@{__prefix}{
   display: block;
   float: left;
   flex: 0 0 auto;
 }
-.@{prefix}-pull,.@{prefix}-push{
+.@{__prefix}-pull,.@{__prefix}-push{
   position: relative;
 }
 .generateGrid(@n,@type:~'', @i: @n) when (@i > 0) {
   @width: (@i / @n);
-  .@{prefix}@{type}-@{i} {
+  .@{__prefix}@{type}-@{i} {
     width: percentage(@width);
   }
-  .@{prefix}@{type}-offset-@{i} {
+  .@{__prefix}@{type}-offset-@{i} {
     margin-left: percentage(@width);
   }
-  .@{prefix}@{type}-pull-@{i}  {
+  .@{__prefix}@{type}-pull-@{i}  {
     right: percentage(@width);
   }
-  .@{prefix}@{type}-push-@{i}  {
+  .@{__prefix}@{type}-push-@{i}  {
     left: percentage(@width);
   }
   .generateGrid(@n, @type,(@i - 1));

@@ -1,11 +1,11 @@
-@prefix: @row;
+@__prefix: @row;
 
-.@{prefix},.@{prefix}-flex{
+.@{__prefix},.@{__prefix}-flex{
   box-sizing: border-box;
   margin-left: 0;
   margin-right: 0;
 }
-.@{prefix}{
+.@{__prefix}{
   position: relative;
   display: block;
   margin-left: 0;
@@ -14,7 +14,7 @@
   zoom: 1;
   .clearfix;
 }
-.@{prefix}-flex{
+.@{__prefix}-flex{
   flex: 1;
   display: flex;
   flex-wrap: wrap;
@@ -28,7 +28,7 @@
 @realJustifies: flex-start, flex-end, center, space-around, space-between;
 .loopJustifies(@len) when (@len > 0) {
   @justify:extract(@justifies, @len);
-  .@{prefix}-@{justify}{
+  .@{__prefix}-@{justify}{
     justify-content: extract(@realJustifies, @len);
   }
   .loopJustifies((@len - 1));
@@ -39,7 +39,7 @@
 @realAlign: flex-start, center, flex-end;
 .loopAlign(@len) when (@len > 0) {
   @a:extract(@align, @len);
-  .@{prefix}-@{a}{
+  .@{__prefix}-@{a}{
     align-items: extract(@realAlign, @len);
   }
   .loopAlign((@len - 1));

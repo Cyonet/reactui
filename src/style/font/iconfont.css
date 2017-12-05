@@ -317,8 +317,6 @@
 
 .icon-link:before { content: "\ea2e"; }
 
-.icon-loading1:before { content: "\ea2f"; }
-
 .icon-lock:before { content: "\ea30"; }
 
 .icon-left-square-o:before { content: "\ea31"; }
@@ -538,3 +536,21 @@
 .icon-wordfile:before { content: "\ea9d"; }
 
 .icon-circle-down-o2:before { content: "\eb93"; }
+
+
+@keyframes loading {
+  0% {
+    transform-origin: 50% 50%;
+    transform: rotate(0deg);
+  }
+  100% {
+    transform-origin: 50% 50%;
+    transform: rotate(360deg);
+  }
+}
+.icon-loading:before {
+  display: inline-block;
+  content: "\ea2f";
+  animation: loading 1s infinite linear;
+
+}

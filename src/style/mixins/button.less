@@ -17,32 +17,32 @@
 
 .button-variant(@color; @background; @border) {
   .button-color(@color; @background; @border);
-  &.loaded,
-  &.loaded:hover
+  &.btn-loaded,
+  &.btn-loaded:hover
   {
     .button-color(shade(@color, 10%); shade(@background, 10%); shade(@background, 10%));
   }
 
   &:hover
   &:active,
-  &.active {
+  &.btn-active {
     .button-color(shade(@color, 5%); shade(@background, 5%); shade(@background, 5%));
   }
 }
 
 .button-text(@color){
-  &.text{
+  &.btn-text{
     .button-color(@color, transparent, transparent);
     &:hover
     &:active,
-    &.active {
+    &.btn-active {
       .button-color(shade(@color, 10%), transparent, transparent);
     }
   }
 }
 .button-fatory(@color, @background, @border){
   .button-variant(@color, @background, @border);
-  &.ghost{
+  &.btn-ghost{
     .button-variant(@background, @white-color, @background);
   }
   .button-text(@background);

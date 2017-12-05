@@ -9,10 +9,12 @@
   border: 1px solid transparent;
   white-space: nowrap;
   user-select: none;
-  width: 100px;
   transition: color 0.3s linear, background-color 0.3s linear, border 0.3s linear;
   &-radius{
     .button-raduis(@btn-border-radius);
+  }
+  &-icon{
+    padding-right: 6px;
   }
 
   &,
@@ -118,12 +120,8 @@
   }
 }
 
-.loading{
+.btn-loading{
   display: inline-block;
   vertical-align: middle;
   margin-left: 4px;
-  width: 14px;
-  height: 14px;
-  //background-image: url('../../styles/images/loading.gif');
-  background-size: contain;
 }

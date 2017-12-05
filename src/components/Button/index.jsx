@@ -90,7 +90,7 @@ class Button extends React.Component {
         >
           { (icon && <Icon className="btn-icon" type={icon} />) || null}
           {children}
-          {(loading && <i className="btn-loading" />) || null}
+          {(loading && <Icon className="btn-loading" type="loading" />) || null}
         </button>);
     }
 }

@@ -5,9 +5,10 @@ const path = require('path')
 const express = require('express')
 const webpack = require('webpack')
 const proxyMiddleware = require('http-proxy-middleware')
-const webpackConfig = (process.env.NODE_ENV === 'testing' || process.env.NODE_ENV === 'production')
-    ? require('./webpack.prod.conf')
-    : require('./webpack.dev.conf')
+const webpackConfig = require('./webpack.dev.conf');
+// const webpackConfig = (process.env.NODE_ENV === 'testing' || process.env.NODE_ENV === 'production')
+//     ? require('./webpack.prod.conf')
+//     : require('./webpack.dev.conf')
 
 const proxyTable = require('./proxy.config');
 
@@ -61,4 +62,3 @@ devMiddleware.waitUntilValid(() => {
         app.listen(port)
     })
 })
-
