@@ -3,7 +3,7 @@ import PropType from 'prop-types';
 import classNames from 'classnames';
 
 function Icon({ type, className, ...other }) {
-  return <i className={classNames('icon', 'iconfont', `icon-${type}`, className)} {...other} />;
+  return <i className={classNames('icon', `icon-${type}`, className)} {...other} />;
 }
 
 Icon.defaultProps = {

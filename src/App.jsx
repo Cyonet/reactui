@@ -8,6 +8,7 @@ import {
 } from 'react-router-dom';
 import Button from './demo/Button';
 import Layout from './demo/Layout';
+import Menu from './demo/Menu';
 
 const Home = () => (
   <div>
@@ -23,6 +24,12 @@ const Home = () => (
     >
       button
     </NavLink>
+    <NavLink
+      activeClassName="link-active"
+      to="/menu"
+    >
+      menu
+    </NavLink>
   </div>);
 
 const Not = () => (<p>404</p>);
@@ -37,6 +44,7 @@ export default class App extends React.Component {
           <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/button" component={Button} />
+            <Route exact path="/menu" component={Menu} />
             <Route exact path="/layout" component={Layout} />
             <Redirect from="/btn" to="/button" />
             <Route exact path="**" component={Not} />

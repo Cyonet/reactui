@@ -32,6 +32,7 @@ module.exports = {
         "jsx-a11y/aria-props": 0,
         "jsx-a11y/click-events-have-key-events": 0,
         "jsx-a11y/role-supports-aria-props": 0,
+        "jsx-a11y/no-static-element-interactions": 0,
         "max-len": ["error", 120],
         "no-plusplus": 0
     }
