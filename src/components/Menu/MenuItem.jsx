@@ -14,7 +14,7 @@ class MenuItem extends React.Component {
     e.preventDefault();
     e.stopPropagation();
     const { onSelect, name } = this.props;
-    onSelect({ name });
+    onSelect(name);
   };
 
   render() {

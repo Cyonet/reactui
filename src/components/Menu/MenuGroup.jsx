@@ -33,7 +33,7 @@ class MenuGroup extends Component {
 MenuGroup.defaultProps = {
   onSelect: noop,
   onCollect: noop,
-  active: [],
+  active: undefined,
 };
 
 MenuGroup.propTypes = {
@@ -47,7 +47,7 @@ MenuGroup.propTypes = {
   title: propType.node.isRequired,
   onSelect: propType.func,
   onCollect: propType.func,
-  active: propType.oneOfType([propType.number, propType.string, propType.array]),
+  active: propType.oneOfType([propType.number, propType.string]),
 };
 
 export default MenuGroup;

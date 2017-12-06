@@ -7,6 +7,7 @@
 }
 .menu{
   font-size: @font-size;
+  user-select: none;
   transition: backgroud 0.3s, height 0.4s;
   &-light{//高亮
     color: @menu-light-font-color;
@@ -42,7 +43,7 @@
   &-submenu{
     display: block;
     width: 100%;
-    &-open{
+    &&-open{
       .menu-submenu-list{
         display: block;
       }
@@ -65,6 +66,7 @@
       padding: 0 16px;
       height: @menu-base-height;
       line-height: @menu-base-height;
+      cursor: pointer;
     }
     .menu-submenu-arrow{
       position: absolute;

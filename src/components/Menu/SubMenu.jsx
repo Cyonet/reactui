@@ -82,7 +82,7 @@ SubMenu.defaultProps = {
   onSelect: noop,
   onOpenChange: noop,
   onTitleClick: noop,
-  active: [],
+  active: undefined,
   openSubMenus: [],
 };
 
@@ -102,7 +102,7 @@ SubMenu.propTypes = {
   onSelect: propType.func,
   onOpenChange: propType.func,
   onTitleClick: propType.func,
-  active: propType.oneOfType([propType.number, propType.string, propType.array]),
+  active: propType.oneOfType([propType.number, propType.string]),
 };
 
 export default SubMenu;
