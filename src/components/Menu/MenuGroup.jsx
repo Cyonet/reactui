@@ -1,7 +1,7 @@
 import React, { Component, cloneElement } from 'react';
 import propType from 'prop-types';
-import MenuItem from './MenuItem';
 import { noop } from '../../utils/utils';
+import { getComponentName } from './util';
 
 class MenuGroup extends Component {
   displayName = 'MenuGroup';
@@ -37,7 +37,13 @@ MenuGroup.defaultProps = {
 };
 
 MenuGroup.propTypes = {
-  children: propType.arrayOf(propType.instanceOf(MenuItem)).isRequired,
+  children: propType.arrayOf((propValue, key, componentName) => {
+    const name = getComponentName(propValue[key]);
+    if (!(name === 'MenuItem')) {
+      return new Error(`child of index ${key} type is not MenuItem supplied to ${componentName} . Validation failed.`);
+    }
+    return true;
+  }).isRequired,
   title: propType.node.isRequired,
   onSelect: propType.func,
   onCollect: propType.func,

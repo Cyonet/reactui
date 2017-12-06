@@ -1,16 +1,24 @@
 import React from 'react';
 import propType from 'prop-types';
 import classNames from 'classnames';
-import { noop, unique } from '../../utils/utils';
+import { noop, unique, extract } from '../../utils/utils';
 import MenuItem from './MenuItem';
 import MenuGroup from './MenuGroup';
 import SubMenu from './SubMenu';
+import { getComponentName } from './util';
 
 function formatOpens(openSubMenus, accordion) {
   if (accordion) return openSubMenus.slice(0, 1);
   return unique(openSubMenus);
 }
 class Menu extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      active: props.active,
+      openSubMenus: formatOpens(props.openSubMenus, props.accordion),
+    };
+  }
   componentWillReceiveProps(nextProps) {
     const { active, openSubMenus } = nextProps;
     if (active !== this.props.active && active) {
@@ -19,12 +27,6 @@ class Menu extends React.Component {
     if (openSubMenus !== this.props.openSubMenus && openSubMenus) {
       this.setState({ openSubMenus: formatOpens(openSubMenus, this.props.accordion) });
     }
-  }
-  construct(props) {
-    this.state = {
-      active: props.active,
-      openSubMenus: formatOpens(props.openSubMenus, props.accordion),
-    };
   }
   handleSelect = (active) => {
     const { onSelect } = this.props;
@@ -56,16 +58,16 @@ class Menu extends React.Component {
     const {
       active,
       openSubMenus,
-      children,
     } = this.state;
-    return React.Children.map(children, child => {
-      const { props, displayName } = child;
+    return React.Children.map(this.props.children, child => {
+      const { props } = child;
       const newProps = {
         ...props,
         active,
         onSelect: this.handleSelect,
       };
       delete newProps.children;
+      const displayName = getComponentName(child);
       if (displayName === 'MenuGroup') {
         return React.cloneElement(child, newProps, props.children);
       } else if (displayName === 'MenuItem') {
@@ -87,11 +89,12 @@ class Menu extends React.Component {
       ...other
     } = this.props;
     const classes = classNames('menu', `menu-${theme}`, `menu-${mode}`, className);
+    const otherProps = extract(other, ['active', 'openSubMenus', 'accordion', 'onSelect', 'onOpenChange']);
     return (
       <ul
         role="menu"
         className={classes}
-        {...other}
+        {...otherProps}
       >
         {this.renderMenuItem()}
       </ul>);
@@ -118,10 +121,11 @@ Menu.propTypes = {
   className: propType.string,
   onSelect: propType.func,
   onOpenChange: propType.func,
-  children: propType.arrayOf((propValue, key, componentName, location, propFullName) => {
-    const current = propValue[key];
-    if ((current instanceof MenuItem) || (current instanceof SubMenu) || (current instanceof MenuGroup)) {
-      return new Error(`Invalid prop ${propFullName} supplied to ${componentName} . Validation failed.`);
+  children: propType.arrayOf((propValue, key, componentName) => {
+    const name = getComponentName(propValue[key]);
+    if (!((name === 'MenuItem') || (name === 'SubMenu') || (name === 'MenuGroup'))) {
+      return new Error(`child of index ${key} type is not MenuItem or SubMenu or MenuGroup
+        supplied to ${componentName} . Validation failed.`);
     }
     return true;
   }).isRequired,

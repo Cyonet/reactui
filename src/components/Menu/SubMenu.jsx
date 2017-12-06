@@ -1,9 +1,8 @@
 import React from 'react';
 import propType from 'prop-types';
 import classNames from 'classnames';
-import MenuItem from './MenuItem';
-import MenuGroup from './MenuGroup';
 import { noop, inArray } from '../../utils/utils';
+import { getComponentName } from './util';
 
 class SubMenu extends React.Component {
   displayName = 'SubMenu';
@@ -20,7 +19,7 @@ class SubMenu extends React.Component {
     return togetherActive && inArray(this.childNames, active);
   }
   // 收集子类name
-  collectNames(name) {
+  collectNames = (name) => {
     const { togetherActive } = this.props;
     if (togetherActive) this.childNames.push(name);
   }
@@ -37,14 +36,17 @@ class SubMenu extends React.Component {
       togetherActive,
     } = this.props;
     return React.Children.map(children, child => {
-      const { props, displayName } = child;
+      const { props } = child;
       const newProps = { ...props, active, onSelect };
+      const displayName = getComponentName(child);
       if (displayName === 'MenuGroup') {
         if (togetherActive) newProps.onCollect = this.collectNames;
         return React.cloneElement(child, newProps, props.children);
+      } else if (displayName === 'MenuItem') {
+        this.collectNames(props.name);
+        return React.cloneElement(child, newProps, props.children);
       }
-      this.collectNames(props.name);
-      return React.cloneElement(child, newProps, props.children);
+      return null;
     });
   }
 
@@ -88,12 +90,19 @@ SubMenu.propTypes = {
   title: propType.node.isRequired,
   name: propType.oneOfType([propType.number, propType.string]).isRequired,
   openSubMenus: propType.arrayOf(propType.oneOfType([propType.string, propType.number])), // 从menu 传递
-  children: propType.arrayOf(propType.oneOfType([
-    propType.instanceOf(MenuItem),
-    propType.instanceOf(MenuGroup)])).isRequired,
+  children: propType.arrayOf((propValue, key, componentName) => {
+    const name = getComponentName(propValue[key]);
+    if (!((name === 'MenuItem') || (name === 'MenuGroup'))) {
+      return new Error(`child of index ${key} type is not MenuItem or MenuGroup
+        supplied to ${componentName} . Validation failed.`);
+    }
+    return true;
+  }).isRequired,
   togetherActive: propType.bool, // 子节点激活是否同步激活
   onSelect: propType.func,
   onOpenChange: propType.func,
   onTitleClick: propType.func,
   active: propType.oneOfType([propType.number, propType.string, propType.array]),
 };
+
+export default SubMenu;
