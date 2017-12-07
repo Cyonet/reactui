@@ -4,6 +4,7 @@
   box-sizing: border-box;
   margin-left: 0;
   margin-right: 0;
+  .clearfix;
 }
 .@{__prefix}{
   position: relative;
@@ -23,6 +24,15 @@
     display: flex;
   }
 }
+@direction: column-reverse, row-reverse, column, row;
+.loopDirection(@len) when (@len > 0) {
+  @dir:extract(@direction, @len);
+  .@{__prefix}-@{dir}{
+    flex-direction: @dir;
+  }
+  .loopDirection((@len - 1));
+}
+.loopDirection(length(@direction));
 //flex justify
 @justifies: start, end, center, space-around, space-between;
 @realJustifies: flex-start, flex-end, center, space-around, space-between;

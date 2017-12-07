@@ -22,8 +22,13 @@ class MenuItem extends React.Component {
       children,
       name,
       indent,
+      mode,
     } = this.props;
     const active = this.calcIsActive();
+    const style = {};
+    if (mode !== 'horizontal') {
+      style.paddingLeft = indent;
+    }
     return (
       <li
         role="menuitem"
@@ -31,7 +36,7 @@ class MenuItem extends React.Component {
         onClick={this.handleClick}
         key={name}
         className={classNames('menu-item', { 'menu-item-acitve': active })}
-        style={{ paddingLeft: indent }}
+        style={style}
       >
         {children}
       </li>
@@ -43,12 +48,14 @@ MenuItem.defaultProps = {
   active: undefined,
   onSelect: noop,
   indent: 24,
+  mode: 'vertical',
 };
 
 MenuItem.propTypes = {
   children: propType.node,
   onSelect: propType.func,
   indent: propType.number,
+  mode: propType.oneOf(['vertical', 'horizontal']),
   name: propType.oneOfType([propType.number, propType.string]).isRequired,
   active: propType.oneOfType([propType.number, propType.string, propType.array]),
 };

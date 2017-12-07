@@ -1,4 +1,7 @@
 @border-color:#e8e8e8;
+
+
+@zIndex: 100;
 /*color**/
 @primary-color:#1890ff;
 @gray-color:#757575;
@@ -47,6 +50,7 @@
 
 
 /**menu*/
+@menu-zIndex: (@zIndex + 10);
 @menu-v-width: 240px;
 @menu-light-font-color: @font-color;
 @menu-light-bg: @white-color;
@@ -54,3 +58,4 @@
 @menu-dark-font-color: shade(@white-color, 20%);
 @menu-base-height: 40px;
 @menu-horizontal-height:60px;
+@menu-horizontal-min-width:100px;

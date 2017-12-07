@@ -6,6 +6,10 @@ import { getComponentName } from './util';
 
 class SubMenu extends React.Component {
   displayName = 'SubMenu';
+  constructor(props) {
+    super(props);
+    this.state = { hover: false };
+  }
   componentWillUnmount() {
     this.childNames = null;
   }
@@ -18,6 +22,9 @@ class SubMenu extends React.Component {
     const { active, togetherActive } = this.props;
     return togetherActive && inArray(this.childNames, active);
   }
+  calceIsHoriz() {
+    return this.props.mode !== 'horizontal';
+  }
   // 收集子类name
   collectNames = (name) => {
     const { togetherActive } = this.props;
@@ -28,6 +35,16 @@ class SubMenu extends React.Component {
     onOpenChange(name, this.calceIsOpen());
     onTitleClick(name);
   };
+  handleMouseEnter = () => {
+    if (!this.calceIsHoriz()) {
+      this.setState({ hover: true });
+    }
+  };
+  handleMouseLeave = () => {
+    if (!this.calceIsHoriz()) {
+      this.setState({ hover: false });
+    }
+  }
   renderList() {
     const {
       active,
@@ -42,7 +59,7 @@ class SubMenu extends React.Component {
         ...props,
         active,
         onSelect,
-        indent: (2 * indent),
+        indent: this.calceIsHoriz() ? (2 * indent) : indent,
       };
       const displayName = getComponentName(child);
       if (displayName === 'MenuGroup') {
@@ -57,21 +74,36 @@ class SubMenu extends React.Component {
   }
 
   render() {
-    const { title, name, indent } = this.props;
+    const {
+      title,
+      name,
+      indent,
+      mode,
+    } = this.props;
     const expanded = this.calceIsOpen();
+    const style = {};
+    if (mode !== 'horizontal') {
+      style.paddingLeft = indent;
+    }
     return (
       <li
         key={name}
         className={classNames(
           'menu-submenu',
-          { 'menu-submenu-open': expanded, 'menu-submenu-active': this.calceIsActive() },
+          {
+            'menu-submenu-open': expanded,
+            'menu-submenu-active': this.calceIsActive(),
+            'menu-submenu-hover': this.state.hover,
+          },
         )}
+        onMouseEnter={this.handleMouseEnter}
+        onMouseLeave={this.handleMouseLeave}
       >
         <div
           aria-expanded={expanded}
           onClick={this.handleClickTitle}
           className="menu-submenu-title"
-          style={{ paddingLeft: indent }}
+          style={style}
         >
           {title}
           <i className="menu-submenu-arrow" />
@@ -91,6 +123,7 @@ SubMenu.defaultProps = {
   indent: 24,
   onTitleClick: noop,
   active: undefined,
+  mode: 'vertical',
   openSubMenus: [],
 };
 
@@ -106,6 +139,7 @@ SubMenu.propTypes = {
     }
     return true;
   }).isRequired,
+  mode: propType.oneOf(['vertical', 'horizontal']), // 模式
   togetherActive: propType.bool, // 子节点激活是否同步激活
   onSelect: propType.func,
   onOpenChange: propType.func,

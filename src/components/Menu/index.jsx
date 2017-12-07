@@ -61,15 +61,18 @@ class Menu extends React.Component {
     } = this.state;
     return React.Children.map(this.props.children, child => {
       const { props } = child;
+      const { indent, mode } = this.props;
       const newProps = {
         ...props,
         active,
         onSelect: this.handleSelect,
-        indent: this.props.indent,
+        indent,
+        mode,
       };
       delete newProps.children;
       const displayName = getComponentName(child);
-      if (displayName === 'MenuGroup') {
+      if (displayName === 'MenuGroup' && mode !== 'horizontal') {
+        delete newProps.mode;
         return React.cloneElement(child, newProps, props.children);
       } else if (displayName === 'MenuItem') {
         return React.cloneElement(child, newProps, props.children);

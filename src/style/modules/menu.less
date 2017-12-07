@@ -12,81 +12,80 @@
   .icon{
     margin-right: @spacex2;
   }
+  &-horizontal, &-vertical{
+    &.menu-light{//高亮
+      color: @menu-light-font-color;
+      background-color: @menu-light-bg;
+      .menu-item{
+        color: @menu-light-font-color;
+        &.menu-item-acitve{
+          &::after{
+            opacity:1;
+            transform: scale(1);
+          }
+          color: @primary-color;
+        }
+        &:hover{
+          color: @primary-color;
+        }
+      }
+      .menu-submenu{
+        &-active, &-title:hover, &-hover .menu-submenu-title{
+          color:@primary-color;
+          .menu-submenu-arrow{
+              &::before, &::after{
+                background-color: tint(@primary-color, 5%);
+              }
+          }
+        }
+        &-arrow{
+          &::before, &::after{
+            background-color: @menu-light-font-color;
+          }
+        }
+      }
+      .menu-group{
+        &-title{
+          color: tint(@menu-light-font-color, 10%);
+        }
+      }
+    }
+    &.menu-dark{
+      color: @menu-dark-font-color;
+      background-color: @menu-dark-bg;
+      .menu-item {
+        color: @menu-dark-font-color;
+        &.menu-item-acitve{
+          color: @white-color;
+          background-color: shade(@menu-dark-bg, 50%);
+        }
+        &:hover{
+          color: @white-color;
+        }
+      }
+      .menu-submenu{
+        &-active, &-title:hover, &-hover .menu-submenu-title{
+          color: @white-color;
+          .menu-submenu-arrow{
+              &::before, &::after{
+                background-color: shade(@white-color, 3%);
+              }
+          }
+        }
 
-  &-light{//高亮
-    color: @menu-light-font-color;
-    background-color: @menu-light-bg;
-    .menu-item{
-      &.menu-item-acitve{
-        &::after{
-          opacity:1;
-          transform: scale(1);
+        &-arrow{
+          &::before, &::after{
+            background-color: @menu-dark-font-color;
+          }
         }
-        color: @primary-color;
-        background-color: tint(@primary-color, 90%);
-      }
-      &:hover{
-        color: @primary-color;
-      }
-    }
-    .menu-submenu{
-      &-active, &-title:hover{
-        color:@primary-color;
-        .menu-submenu-arrow{
-            &::before, &::after{
-              background-color: tint(@primary-color, 5%);
-            }
+        &-list{
+          background-color: shade(@menu-dark-bg, 20%);
         }
       }
-      &-arrow{
-        &::before, &::after{
-          background-color: @menu-light-font-color;
+      .menu-group{
+        &-title{
+          color: shade(@menu-dark-font-color, 20%);
         }
-      }
-      &-list{
-        background-color: shade(@menu-light-bg, 10%);
-      }
-    }
-    .menu-group{
-      &-title{
-        color: tint(@menu-light-font-color, 10%);
-      }
-    }
-  }
-  &-dark{
-    color: @menu-dark-font-color;
-    background-color: @menu-dark-bg;
-    .menu-item {
-      &.menu-item-acitve{
-        color: @white-color;
-        background-color: shade(@menu-dark-bg, 50%);
-      }
-      &:hover{
-        color: @white-color;
-      }
-    }
-    .menu-submenu{
-      &-active, &-title:hover{
-        color: @white-color;
-        .menu-submenu-arrow{
-            &::before, &::after{
-              background-color: shade(@white-color, 3%);
-            }
-        }
-      }
-
-      &-arrow{
-        &::before, &::after{
-          background-color: @menu-dark-font-color;
-        }
-      }
-      &-list{
-        background-color: shade(@menu-dark-bg, 20%);
-      }
-    }
-    .menu-group{
-      &-title{
-        color: shade(@menu-dark-font-color, 20%);
       }
     }
   }
@@ -94,9 +93,140 @@
     display: block;
     width: @menu-v-width;
     height: 100%;
+    .menu-submenu{
+      width: 100%;
+      &.menu-submenu-open{
+        .menu-submenu-list{
+          display: block;
+        }
+      }
+
+    }
+    .menu-item{
+      &::after{
+        top:0;
+        bottom: 0;
+        right: 0;
+        width: 3px;
+      }
+    }
+
+    &.menu-light{//高亮
+      color: @menu-light-font-color;
+      background-color: @menu-light-bg;
+      .menu-item{
+        &.menu-item-acitve{
+          background-color: tint(@primary-color, 90%);
+        }
+      }
+      .menu-submenu{
+        &-list{
+          background-color: shade(@menu-light-bg, 10%);
+        }
+      }
+      .menu-group{
+        &-title{
+          color: tint(@menu-light-font-color, 10%);
+        }
+      }
+    }
   }
   &-horizontal{
     display: inline-block;
+    border-bottom: 1px solid @border-color;
+    &>li{
+      display: inline-block;
+      height: @menu-horizontal-height;
+      line-height: @menu-horizontal-height;
+      min-width: @menu-horizontal-min-width;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .menu-submenu{
+      display: inline-block;
+      position: relative;
+      &.menu-submenu-hover .menu-submenu-list{
+        display: block;
+      }
+      &-title{
+        padding: 0 @spacex2;
+        min-width: @menu-horizontal-min-width;
+        height: @menu-horizontal-height;
+        line-height: @menu-horizontal-height;
+        text-align: center;
+      }
+
+      &-list{
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin-top: 4px;
+        z-index: @menu-zIndex;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        border-radius: 3px;
+        text-align: left;
+        &::before{
+          position: absolute;
+          content: '';
+          left: 0;
+          right: 0;
+          top:-4px;
+          height: 4px;
+          background-color: transparent;
+        }
+
+      }
+      & .menu-item.menu-item-acitve{
+        &::after{
+          opacity:0;
+          transform: scale(0);
+        }
+      }
+    }
+    &.menu-light{
+      .menu-submenu{
+        &-title{
+          &::after{
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            height: 3px;
+            background-color: @primary-color;
+            opacity: 0;
+            transform: scale(0);
+            transition: transform 0.4s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1)
+          }
+        }
+        &-active .menu-submenu-title, &.menu-submenu-hover .menu-submenu-title{
+          &::after{
+            opacity:1;
+            transform: scale(1);
+          }
+          color: @primary-color;
+          background-color: transparent;
+        }
+      }
+      .menu-item{
+        &::after{
+          left: 0;
+          bottom: 0;
+          right: 0;
+          height: 3px;
+        }
+        &.menu-item-acitve{
+          background-color: transparent;
+        }
+      }
+    }
+    &.menu-dark{
+      .menu-submenu{
+        &-active, &-title:hover, &-hover .menu-submenu-title{
+          background-color: shade(@menu-dark-bg, 50%);
+        }
+      }
+    }
   }
  // menuitem
   &-item{
@@ -109,13 +239,10 @@
     line-height: @menu-base-height;
     list-style: none;
     transition: color 0.3s;
+    .ellipsis();
     &::after{
       content: "";
       position: absolute;
-      top:0;
-      bottom: 0;
-      right: 0;
-      width: 3px;
       background-color: @primary-color;
       opacity: 0;
       transform: scale(0);
@@ -143,21 +270,16 @@
   // SubMenu
   &-submenu{
     display: block;
-    width: 100%;
     &&-open{
-      .menu-submenu-list{
-        display: block;
-      }
       .menu-submenu-arrow{
         &::before{
-          transform: rotate(45deg) translateX(2px);
+          transform: rotate(45deg) translate(1.5px, -1.5px);
         }
         &::after{
-          transform: rotate(-45deg) translateX(-2px);
+          transform: rotate(-45deg) translate(-1.5px, -1.5px);
         }
       }
     }
-
     &-title{
       display: block;
       position: relative;
@@ -165,6 +287,7 @@
       height: @menu-base-height;
       line-height: @menu-base-height;
       cursor: pointer;
+      .ellipsis();
     }
     &-arrow{
       position: absolute;
@@ -198,6 +321,7 @@
       line-height: 1.5;
       padding: 8px 16px;
       transition: all .3s;
+      .ellipsis();
     }
   }
 }

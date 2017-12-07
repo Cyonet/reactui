@@ -18,6 +18,7 @@ function Row(props) {
     justify,
     align,
     style,
+    direction,
   } = props;
   let classes;
   if (type === 'flex') {
@@ -25,6 +26,7 @@ function Row(props) {
       [`${PREFIX}-flex`]: true,
       [`${PREFIX}-${justify}`]: justify,
       [`${PREFIX}-${align}`]: align,
+      [`${PREFIX}-${direction}`]: direction,
     });
   } else {
     classes = classNames(className, `${PREFIX}`);
@@ -45,23 +47,24 @@ Row.defaultProps = {
   gutter: 0,
   tag: 'div',
   className: '',
-  type: undefined,
+  type: '',
   children: null,
   align: 'top',
   justify: 'start',
   style: {},
+  direction: 'column',
 };
 
 Row.propTypes = {
   gutter: PropTypes.number,
   className: PropTypes.string,
   style: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
-  type: PropTypes.string, // flex
+  type: PropTypes.oneOf(['', 'flex']), // flex
   children: PropTypes.node,
   align: PropTypes.oneOf(['top', 'middle', 'bottom']),
   justify: PropTypes.oneOf(['start', 'end', 'center', 'space-around', 'space-between']),
+  direction: PropTypes.oneOf(['column', 'row', 'column-reverse', 'row-reverse']),
   tag: PropTypes.string,
 };
 
 export default Row;
-

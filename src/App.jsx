@@ -25,7 +25,7 @@ const Not = () => (<p>404</p>);
 
 export default class App extends React.Component {
   state = {
-    active: window.location.pathname || '/home',
+    active: window.location.pathname || '/',
   };
   handleMenuSelect = () => {
 
@@ -43,7 +43,7 @@ export default class App extends React.Component {
                 onSelect={this.hanleMenuSelect}
                 active={this.state.active}
               >
-                <MenuItem name="/home">
+                <MenuItem name="/">
                   <NavLink to="/" >
                     <Icon type="home" />
                     Home 首页
