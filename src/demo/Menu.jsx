@@ -9,7 +9,7 @@ import {
 export default function ButtonDemo() {
   return (
     <div className="demo-cart">
-      <Menu>
+      <Menu theme="dark">
         <MenuItem name="1">
           测试1
         </MenuItem>
