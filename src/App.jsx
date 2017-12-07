@@ -6,49 +6,80 @@ import {
   Redirect,
   NavLink,
 } from 'react-router-dom';
+import {
+  Menu,
+  MenuItem,
+} from './components/Menu';
 import Button from './demo/Button';
+import Icon from './components/Icon';
 import Layout from './demo/Layout';
-import Menu from './demo/Menu';
+import MenuDemo from './demo/Menu';
 
 const Home = () => (
-  <div>
-    <NavLink
-      to="/layout"
-      activeClassName="link-active"
-    >
-      layout
-    </NavLink>
-    <NavLink
-      activeClassName="link-active"
-      to="/button"
-    >
-      button
-    </NavLink>
-    <NavLink
-      activeClassName="link-active"
-      to="/menu"
-    >
-      menu
-    </NavLink>
+  <div className="main">
+    <h2>首页</h2>
+    <p>待建设。。。。。</p>
   </div>);
 
 const Not = () => (<p>404</p>);
 
 export default class App extends React.Component {
-  state = {};
+  state = {
+    active: window.location.pathname || '/home',
+  };
+  handleMenuSelect = () => {
+
+  }
   render() {
     return (
       <Router>
-        <div className="container">
-          <h3>测试</h3>
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/button" component={Button} />
-            <Route exact path="/menu" component={Menu} />
-            <Route exact path="/layout" component={Layout} />
-            <Redirect from="/btn" to="/button" />
-            <Route exact path="**" component={Not} />
-          </Switch>
+        <div className="warpper">
+          <header className="header">
+            Header
+          </header>
+          <div className="container">
+            <div className="menu-container">
+              <Menu
+                onSelect={this.hanleMenuSelect}
+                active={this.state.active}
+              >
+                <MenuItem name="/home">
+                  <NavLink to="/" >
+                    <Icon type="home" />
+                    Home 首页
+                  </NavLink>
+                </MenuItem>
+                <MenuItem name="/button">
+                  <NavLink to="/button">
+                    <Icon type="pause-circle-o" />
+                    Button 按钮
+                  </NavLink>
+                </MenuItem>
+                <MenuItem name="/layout">
+                  <NavLink to="/layout">
+                    <Icon type="switcher" />
+                    Layout 布局
+                  </NavLink>
+                </MenuItem>
+                <MenuItem name="/menu">
+                  <NavLink to="/menu">
+                    <Icon type="menuunfold" />
+                    Menu 菜单
+                  </NavLink>
+                </MenuItem>
+              </Menu>
+            </div>
+            <div className="main-container">
+              <Switch>
+                <Route exact path="/" component={Home} />
+                <Route exact path="/button" component={Button} />
+                <Route exact path="/menu" component={MenuDemo} />
+                <Route exact path="/layout" component={Layout} />
+                <Redirect from="/btn" to="/button" />
+                <Route exact path="**" component={Not} />
+              </Switch>
+            </div>
+          </div>
         </div>
       </Router>
     );

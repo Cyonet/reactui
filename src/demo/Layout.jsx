@@ -8,7 +8,7 @@ export default class Layout extends React.Component {
   state = {}
   render() {
     return (
-      <div className="demo-cart" style={{ width: '1200px', margin: '0 auto' }}>
+      <div className="demo-cart">
         <Row className="demo-row">
           <Col span={12}>
             <div className="demo-row-red">12</div>

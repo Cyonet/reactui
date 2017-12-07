@@ -11,18 +11,24 @@ class MenuGroup extends Component {
       onSelect,
       children,
       onCollect,
+      indent,
     } = this.props;
     return React.Children.map(children, child => {
       const { props } = child;
       onCollect(props.name);
-      return cloneElement(child, { ...props, active, onSelect }, props.children);
+      return cloneElement(child, {
+        ...props,
+        active,
+        onSelect,
+        indent,
+      }, props.children);
     });
   }
   render() {
-    const { title } = this.props;
+    const { title, indent } = this.props;
     return (
       <li className="menu-group">
-        <div className="menu-group-title">{title}</div>
+        <div className="menu-group-title" style={{ paddingLeft: ((2 * indent) / 3) }}>{title}</div>
         <ul className="menu-group-list">
           {this.renderMenuItem()}
         </ul>
@@ -34,6 +40,7 @@ MenuGroup.defaultProps = {
   onSelect: noop,
   onCollect: noop,
   active: undefined,
+  indent: 24,
 };
 
 MenuGroup.propTypes = {
@@ -47,6 +54,7 @@ MenuGroup.propTypes = {
   title: propType.node.isRequired,
   onSelect: propType.func,
   onCollect: propType.func,
+  indent: propType.number,
   active: propType.oneOfType([propType.number, propType.string]),
 };
 

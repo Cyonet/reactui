@@ -21,6 +21,7 @@ class MenuItem extends React.Component {
     const {
       children,
       name,
+      indent,
     } = this.props;
     const active = this.calcIsActive();
     return (
@@ -29,7 +30,8 @@ class MenuItem extends React.Component {
         aria-selected={active}
         onClick={this.handleClick}
         key={name}
-        className={classNames('menu-item', { 'menu-item-active': active })}
+        className={classNames('menu-item', { 'menu-item-acitve': active })}
+        style={{ paddingLeft: indent }}
       >
         {children}
       </li>
@@ -40,11 +42,13 @@ MenuItem.defaultProps = {
   children: null,
   active: undefined,
   onSelect: noop,
+  indent: 24,
 };
 
 MenuItem.propTypes = {
   children: propType.node,
   onSelect: propType.func,
+  indent: propType.number,
   name: propType.oneOfType([propType.number, propType.string]).isRequired,
   active: propType.oneOfType([propType.number, propType.string, propType.array]),
 };

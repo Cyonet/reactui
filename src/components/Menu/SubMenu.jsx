@@ -34,10 +34,16 @@ class SubMenu extends React.Component {
       onSelect,
       children,
       togetherActive,
+      indent,
     } = this.props;
     return React.Children.map(children, child => {
       const { props } = child;
-      const newProps = { ...props, active, onSelect };
+      const newProps = {
+        ...props,
+        active,
+        onSelect,
+        indent: (2 * indent),
+      };
       const displayName = getComponentName(child);
       if (displayName === 'MenuGroup') {
         if (togetherActive) newProps.onCollect = this.collectNames;
@@ -51,7 +57,7 @@ class SubMenu extends React.Component {
   }
 
   render() {
-    const { title, name } = this.props;
+    const { title, name, indent } = this.props;
     const expanded = this.calceIsOpen();
     return (
       <li
@@ -65,6 +71,7 @@ class SubMenu extends React.Component {
           aria-expanded={expanded}
           onClick={this.handleClickTitle}
           className="menu-submenu-title"
+          style={{ paddingLeft: indent }}
         >
           {title}
           <i className="menu-submenu-arrow" />
@@ -81,6 +88,7 @@ SubMenu.defaultProps = {
   togetherActive: true,
   onSelect: noop,
   onOpenChange: noop,
+  indent: 24,
   onTitleClick: noop,
   active: undefined,
   openSubMenus: [],
@@ -102,6 +110,7 @@ SubMenu.propTypes = {
   onSelect: propType.func,
   onOpenChange: propType.func,
   onTitleClick: propType.func,
+  indent: propType.number,
   active: propType.oneOfType([propType.number, propType.string]),
 };
 

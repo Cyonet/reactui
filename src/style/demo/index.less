@@ -1,14 +1,74 @@
-.container{
-  width: 980px;
-  margin: 0 auto;
-  min-height: 100%;
-  background-color: shade(#000, 60)
+//滚动条样式
+//chrome
+::-webkit-scrollbar {
+  width:6px;
+  height: 6px;
 }
-.demo-cart{
+::-webkit-scrollbar-button,::-webkit-scrollbar-track{
+  display: none;
+}
+::-webkit-scrollbar-track-piece,::-webkit-scrollbar-corner{
+  background:transparent;
+}
+::-webkit-scrollbar-thumb{
+  background:fade(#d7d7d7, 40);
+  border-radius:2px;
+}
+
+
+html{
+  width: 100%;
   height: 100%;
+  // height: 100%;
+
+}
+body{
+  min-height:100%;
+  -webkit-font-smoothing:antialiased;
+  font: 12px/150% tahoma,arial,Microsoft YaHei,Hiragino Sans GB,"\u5b8b\u4f53",sans-serif;
+}
+
+html,body{
+  margin: 0;
+  padding: 0;
+}
+#root{
+  height: 100%;
+}
+.warpper{
+  width: 100%;
+  min-height: 100%;
+  margin: 0 auto;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+.header{
+  height: 64px;
+  line-height: 64px;
+  text-align: center;
+  box-shadow: 0 2px 8px #f0f1f2;
+}
+.container{
+  flex:auto;
+  margin-top: @spacex4;
+  display: flex;
+}
+.menu-container{
+  width: 264px;
+  padding-left: @spacex4;
+  margin-right: @spacex4;
+  border-right: 1px solid @border-color;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+}
+.main-container{
+  flex:1;
+  border: 1px solid @border-color;
+}
+
+.demo-cart{
   padding: 12px;
   margin: 12px;
-  box-shadow: 0 0 2px 8px rgba(0,0,0,.15);
 }
 .link-active{
   color:@danger-color;

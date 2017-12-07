@@ -65,6 +65,7 @@ class Menu extends React.Component {
         ...props,
         active,
         onSelect: this.handleSelect,
+        indent: this.props.indent,
       };
       delete newProps.children;
       const displayName = getComponentName(child);
@@ -110,6 +111,7 @@ Menu.defaultProps = {
   onSelect: noop,
   onOpenChange: noop,
   theme: 'light',
+  indent: 24,
 };
 
 Menu.propTypes = {
@@ -119,6 +121,7 @@ Menu.propTypes = {
   openSubMenus: propType.arrayOf(propType.oneOfType([propType.string, propType.number])), // 展开菜单
   accordion: propType.bool, // 开启手风琴风格。只能展开一个
   className: propType.string,
+  indent: propType.number, //
   onSelect: propType.func,
   onOpenChange: propType.func,
   children: propType.arrayOf((propValue, key, componentName) => {
