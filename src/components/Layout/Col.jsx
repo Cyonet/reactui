@@ -132,7 +132,7 @@ Col.defaultProps = {
   width: 0,
   push: 0,
   pull: 0,
-  type: ''
+  type: '',
 };
 Col.propTypes = {
   tag: PropTypes.string,
@@ -148,7 +148,7 @@ Col.propTypes = {
   xs: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
   sm: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
   md: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
-  lg: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
+  lg: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
 };
 
 export default Col;
