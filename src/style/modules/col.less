@@ -5,6 +5,9 @@
   float: left;
   flex: 0 0 auto;
 }
+.@{__prefix}-flex{
+  flex: 0 0 auto;
+}
 .@{__prefix}-pull,.@{__prefix}-push{
   position: relative;
 }
@@ -24,6 +27,13 @@
   }
   .generateGrid(@n, @type,(@i - 1));
 }
+.generateFlex(@n,@type:~'', @i: @n) when (@i > 0) {
+  @width: (@i / @n);
+  .@{__prefix}-flex@{type}-@{i} {
+     flex:@width;
+  }
+  .generateGrid(@n, @type,(@i - 1));
+}
 //.generateGrid(@n,@type:~'', @i: 0) when (@i = 0) {
 //  .col@{type}-@{i} {
 //    display: none;
@@ -38,17 +48,21 @@
 //    left: auto;
 //  }
 //}
-
+.generateFlex(@gird-span);
 .generateGrid(@gird-span);
 @media (max-width: @screen-sm-min) {
   .generateGrid(@gird-span,-xs);
+  .generateFlex(@gird-span,-xs);
 }
 @media (min-width: @screen-sm-min) {
   .generateGrid(@gird-span, -sm);
+  .generateFlex(@gird-span, -sm);
 }
 @media (min-width: @screen-md-min) {
   .generateGrid(@gird-span, -md);
+  .generateFlex(@gird-span, -md);
 }
 @media (min-width: @screen-lg-min) {
   .generateGrid(@gird-span, -lg);
+  .generateFlex(@gird-span, -lg);
 }

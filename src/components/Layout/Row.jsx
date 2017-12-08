@@ -35,6 +35,7 @@ function Row(props) {
   const cols = React.Children.map(children, (col) => {
     if (React.isValidElement(col)) {
       return React.cloneElement(col, {
+        type,
         style: { ...col.props.style, ...gutterStyle(gutter) },
       });
     }

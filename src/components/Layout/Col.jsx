@@ -20,7 +20,33 @@ function merger(o, name, classes) {
     [`${PREFIX}-${name}-pull-${o.pull}`]: o.pull !== DEFAULT_VALUE,
   });
 }
-
+function mergerFlex(o, name, classes) {
+  if (isNumeric(o)) {
+    if (o) {
+      return classNames(classes, `${PREFIX}-${name}-${o}`);
+    }
+    return classes;
+  }
+  return classes;
+}
+function mergerStyle(o) {
+  const calcStyle = {};
+  let calcClass;
+  if (o.offset) {
+    calcStyle.marginLeft = `${o.offset}px`;
+  }
+  if (o.pull) {
+    calcStyle.position = 'relative';
+    calcStyle.right = `${o.pull}px`;
+    calcClass = `${PREFIX}-pull`;
+  }
+  if (o.push) {
+    calcStyle.position = 'relative';
+    calcStyle.left = `${o.push}px`;
+    calcClass = `${PREFIX}-push`;
+  }
+  return { calcStyle, calcClass };
+}
 function Col(props) {
   const {
     tag,
@@ -36,23 +62,33 @@ function Col(props) {
     sm,
     md,
     lg,
+    type,
   } = props;
-  let classes = classNames(className, PREFIX);
-  const colStyles = style;
+  let classes = classNames(className, type === 'flex' ? `${PREFIX}-flex` : PREFIX);
+  let colStyles = style;
   if (width) {
     colStyles.width = `${width}px`;
-    if (offset) {
-      colStyles.marginLeft = `${offset}px`;
+    const { calcStyle, calcClass } = mergerStyle(props);
+    colStyles = { ...colStyles, ...calcStyle };
+    classes = classNames(classes, calcClass);
+  } else if (type === 'flex') {
+    classes = classNames(classes, {
+      [`${PREFIX}-flex-${span}`]: span !== DEFAULT_VALUE,
+    });
+    const { calcStyle, calcClass } = mergerStyle(props);
+    colStyles = { ...colStyles, ...calcStyle };
+    classes = classNames(classes, calcClass);
+    if (xs) {
+      classes = mergerFlex(xs, 'flex-xs', classes);
     }
-    if (pull) {
-      colStyles.position = 'relative';
-      colStyles.right = `${pull}px`;
-      classes = classNames(classes, `${PREFIX}-pull`);
+    if (sm) {
+      classes = mergerFlex(sm, 'flex-sm', classes);
     }
-    if (push) {
-      colStyles.position = 'relative';
-      colStyles.left = `${push}px`;
-      classes = classNames(classes, `${PREFIX}-push`);
+    if (md) {
+      classes = mergerFlex(md, 'flex-md', classes);
+    }
+    if (lg) {
+      classes = mergerFlex(lg, 'flex-lg', classes);
     }
   } else {
     classes = classNames(classes, {
@@ -96,6 +132,7 @@ Col.defaultProps = {
   width: 0,
   push: 0,
   pull: 0,
+  type: ''
 };
 Col.propTypes = {
   tag: PropTypes.string,
@@ -105,25 +142,13 @@ Col.propTypes = {
   push: PropTypes.number,
   pull: PropTypes.number,
   className: PropTypes.string,
+  type: PropTypes.string,
   children: PropTypes.node,
   style: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
-  xs: PropTypes.oneOfType([
-    PropTypes.object,
-    PropTypes.number,
-  ]),
-  sm: PropTypes.oneOfType([
-    PropTypes.object,
-    PropTypes.number,
-  ]),
-  md: PropTypes.oneOfType([
-    PropTypes.object,
-    PropTypes.number,
-  ]),
-  lg: PropTypes.oneOfType([
-    PropTypes.object,
-    PropTypes.number,
-  ]),
+  xs: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
+  sm: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
+  md: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
+  lg: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
 };
 
 export default Col;
-
