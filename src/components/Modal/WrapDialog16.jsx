@@ -1,6 +1,6 @@
 import React from 'react';
 import propTypes from 'prop-types';
-import Dialog from './Dialog';
+import Portal from './Portal';
 
 class WrapDialog extends React.Component {
   shouldComponentUpdate({ visible }) {
@@ -8,7 +8,7 @@ class WrapDialog extends React.Component {
   }
   render() {
     const { visible, ...other } = this.props;
-    return visible ? <Dialog {...other} /> : null;
+    return visible ? <Portal {...other} /> : null;
   }
 }
 
