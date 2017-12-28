@@ -3,17 +3,16 @@ import ReactDOM from 'react-dom';
 import propTypes from 'prop-types';
 import Wrapper from './Wrapper';
 
-class Dialog extends React.Component {
+class Portal extends React.Component {
   constructor(props) {
     super(props);
     this.layer = this.getContainer();
     this.modalRoot = props.getRoot();
   }
-  componentDidMount() {
-    this.modalRoot.appendChild(this.layer);
-  }
   componentWillUnmount() {
     this.modalRoot.removeChild(this.layer);
+    this.modalRoot = null;
+    this.layer = null;
   }
 
   getContainer() {
@@ -32,14 +31,6 @@ class Dialog extends React.Component {
     const { children, ...other } = this.props;
     return (<Wrapper {...other}>{children}</Wrapper>);
   }
-
-  removeContent() {
-    if (this.layer) {
-      ReactDOM.unmountComponentAtNode(this.layer);
-      this.layer.parentNode.removeChild(this.layer);
-      this.layer = null;
-    }
-  }
   render() {
     return ReactDOM.createPortal(
       // Any valid React child: JSX, strings, arrays, etc.
@@ -49,16 +40,16 @@ class Dialog extends React.Component {
     );
   }
 }
-Dialog.propTypes = {
+Portal.propTypes = {
   getContainer: propTypes.func,
   getRoot: propTypes.func,
   children: propTypes.node,
 };
 
-Dialog.defaultProps = {
+Portal.defaultProps = {
   getContainer: null,
   getRoot: () => document.body,
   children: null,
 };
 
-export default Dialog;
+export default Portal;

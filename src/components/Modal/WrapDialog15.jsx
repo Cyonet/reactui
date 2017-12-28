@@ -17,7 +17,7 @@ class WrapDialog extends React.Component {
     }
   }
   shouldComponentUpdate({ visible }) {
-    return !!(this.props.visible || visible);
+    return this.props.visible !== visible;
   }
   componentDidUpdate() {
     this.renderContent(this);
