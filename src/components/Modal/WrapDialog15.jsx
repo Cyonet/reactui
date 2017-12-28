@@ -5,7 +5,16 @@ import Wrapper from './Wrapper';
 
 class WrapDialog extends React.Component {
   componentDidMount() {
-    this.renderContent(this);
+    if (this.props.visible) {
+      this.renderContent(this);
+    }
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.visible) {
+      this.renderContent(this);
+    } else {
+      this.removeContent(this);
+    }
   }
   shouldComponentUpdate({ visible }) {
     return !!(this.props.visible || visible);
