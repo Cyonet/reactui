@@ -5,4 +5,4 @@ export function stopPropagation(e) {
   }
 }
 
-export function noop(){};
+export function noop() {}

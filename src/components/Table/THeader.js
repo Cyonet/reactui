@@ -1,35 +1,39 @@
 import React from 'react';
 import classNames from 'classnames';
-import {isArray} from 'utils/common';
+import { isArray } from '../../utils/common';
 import styles from './index.less';
 
-export default function (props) {
-  const {headerClass} = props;
-  let columns = props.columns
-  if(!isArray(columns[0])){
+export default function THeader(props) {
+  const { headerClass } = props;
+  let { columns } = props;
+  if (!isArray(columns[0])) {
     columns = [columns];
   }
-  return (<thead className={classNames(styles['thead'], headerClass)}>
-  {columns.map((__columns, __index)=>{
-    return (<tr key={__index}>
+  return (
+    <thead
+      className={classNames(styles.thead, headerClass)}
+    >
       {
-         __columns.map((column, index)=>{
-          const __props = {};
-          if(column.colSpan === 0 || column.rowSpan === 0){
-            return null;
-          }
-          if(column.colSpan){
-            __props.colSpan = column.colSpan;
-          }
-          if(column.rowSpan){
-            __props.rowSpan = column.rowSpan;
-          }
-           __props.className = styles[`${column.align||'center'}`];
-           __props.key = index;
-          return <th  {...__props} style={{width: column.width}}>{ column.title }</th>;
-        })
+        columns.map((__columns, __index) => (
+          <tr key={__index}>
+            {
+              __columns.map((column, index) => {
+              const cache = {};
+              if (column.colSpan === 0 || column.rowSpan === 0) {
+                return null;
+              }
+              if (column.colSpan) {
+                cache.colSpan = column.colSpan;
+              }
+              if (column.rowSpan) {
+                cache.rowSpan = column.rowSpan;
+              }
+              cache.className = classNames(styles[`${column.align || 'center'}`], column.headerClass);
+              cache.key = index;
+              return <th {...cache} style={{ width: column.width }}>{column.title}</th>;
+            })
+            }
+          </tr>))
       }
-    </tr>);
-  })}
-  </thead>);
+    </thead>);
 }

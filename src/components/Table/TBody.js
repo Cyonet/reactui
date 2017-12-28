@@ -2,115 +2,160 @@
  * R91 2017/5/10
  * TablePanel
  */
-import React, {Component} from 'react';
-import {isFunction} from 'utils/common';
-import {noop} from './utils';
-import styles from './index.less';
+import React, { Component } from 'react';
 import classNames from 'classnames';
+import { isFunction } from '../../utils/utils';
+import { noop } from './utils';
+import styles from './index.less';
 
-class Row extends Component{
-  unSubscribe = noop;
+class Row extends Component {
   state = {
-    checked  : false,
-    disabled : false
+    checked: false,
+    disabled: false,
   };
   componentDidMount() {
     this.subscribe();
     this.setRowState(this.props);
   }
-
   componentWillUnmount() {
     this.unSubscribe();
     this.unSubscribe = null;
   }
-
+  setRowState(props) {
+    const { rowState, record, recordIndex } = props;
+    const disabled = rowState(record, recordIndex);
+    if (typeof disabled === 'object') {
+      this.setState({ ...disabled });
+    } else {
+      this.setState({ disabled });
+    }
+  }
   subscribe() {
     const { store, rowState } = this.props;
-    if(rowState && store){
+    if (rowState && store) {
       this.unSubscribe = store.subscribe(() => {
         this.setRowState(this.props);
       });
     }
   }
-
-  setRowState(props) {
-    const { rowState, record, recordIndex } = props;
-    if(rowState){
-      const disabled = rowState(record, recordIndex);
-      if(typeof disabled === 'object'){
-        this.setState({...disabled});
-      }
-      else{
-        this.setState({disabled});
-      }
-    }
+  calcCls() {
+    const { checked, disabled } = this.state;
+    return classNames(styles.row, this.props.className, { [styles.active]: checked, [styles.disabled]: disabled });
   }
-
-  calcCls(){
-    const {checked, disabled} = this.state;
-    return classNames(styles.row, this.props.className, {[styles.active]: checked, [styles.disabled]: disabled});
+  unSubscribe = noop;
+  handleClick = (e) => {
+    e.stopPropagation();
+    const { onClick, record, recordIndex } = this.props;
+    onClick(record, recordIndex);
   }
-
   render() {
     const { children } = this.props;
-    return (<tr className={this.calcCls()}>{children}</tr>);
+    const { checked, disabled } = this.state;
+    return (
+      <tr
+        onClick={ this.handleClick }
+        aria-checked={checked}
+        aria-disabled={disabled}
+        className={this.calcCls()}
+      >
+        {children}
+      </tr>);
   }
 }
 
 function Cell(props) {
-  const {column, record, recordIndex, index} = props;
-  const __props = {};
-  if(column.colSpan === 0 || column.rowSpan === 0){
+  const {
+    column,
+    record,
+    recordIndex,
+    index,
+    onCellClick,
+  } = props;
+  const cache = {};
+  if (column.colSpan === 0 || column.rowSpan === 0) {
     return null;
   }
-  if(column.colSpan){
-    __props.colSpan = column.colSpan;
+  if (column.colSpan) {
+    cache.colSpan = column.colSpan;
   }
-  if(column.rowSpan){
-    __props.rowSpan = column.rowSpan;
+  if (column.rowSpan) {
+    cache.rowSpan = column.rowSpan;
   }
   const classes = classNames(
     column.className,
     {
-      [styles[column.align||'center']]: true,
-      [styles['ellipsis']]: !column.ellipsis}
+      [styles[column.align || 'center']]: true,
+      [styles.ellipsis]: !column.ellipsis,
+    },
   );
-  return (<td className = {classes} {...__props}>
-    { isFunction(column.render) ?
-      column.render(record, recordIndex, index, column.dataIndex):
-      record[column.dataIndex||column.key]}
-  </td>);
+  function hanleCellClick(e) {
+    if (onCellClick) {
+      e.stopPropagation();
+      onCellClick(record[column.dataIndex || column.key], (column.dataIndex || column.key), index, record, recordIndex );
+    }
+  }
+  return (
+    <td
+      className={classes}
+      {...cache}
+      onClick={hanleCellClick}
+      style={{ width: column.width || 'auto'}}
+    >
+      {isFunction(column.render) ?
+        column.render(record, recordIndex, index, column.dataIndex || column.key) :
+        record[column.dataIndex || column.key]}
+    </td>);
 }
 
-class TBody extends Component{
-  render(){
-    const {bodyClass, rowClassName, columns, nodata, store, data, rowState, rowKey} = this.props;
-
-    return <tbody className={classNames(styles['body'], bodyClass)}>
+function TBody(props) {
+  const {
+    bodyClass,
+    rowClassName,
+    columns,
+    nodata,
+    store,
+    data,
+    rowState,
+    rowKey,
+    onRowClick,
+  } = props;
+  return (
+    <tbody
+      className={classNames(styles.body, bodyClass)}
+    >
     {
       data.length ?
-        data.map((record, recordIndex) => {
-          return  (
-            <Row
-              row={record}
-              store={store}
-              key={rowKey(record, recordIndex)}
-              recordIndex={recordIndex}
-              rowState={rowState}
-              className={rowClassName}
-            >
-              {
-                columns.map((column, index)=>(<Cell  key={`${column.key}-${recordIndex}`} column={column} index={index} record={record} recordIndex={recordIndex}/>))
-              }
-             </Row>);
-        }):
-        (<tr  className={styles['no-data']}>
-          <td  colSpan={columns.length}>
-            {nodata? nodata : <span><i className='iconfont icon-icon'/>暂无数据</span>}
-          </td>
-        </tr>)
+        data.map((record, recordIndex) => (
+          <Row
+            record={record}
+            store={store}
+            key={rowKey(record, recordIndex)}
+            recordIndex={recordIndex}
+            rowState={rowState}
+            className={rowClassName}
+            onClick={onRowClick}
+          >
+            {
+              columns.map((column, index) => (
+                <Cell
+                  key={isFunction(column.key) ? column.key(record, recordIndex) : `${column.key}-${recordIndex}`}
+                  column={column}
+                  index={index}
+                  record={record}
+                  recordIndex={recordIndex}
+                />))
+            }
+          </Row>
+        )) :
+        (
+          <tr className={styles['no-data']}>
+            <td colSpan={columns.length}>
+              {nodata || <span><i className="iconfont icon-icon" />暂无数据</span>}
+            </td>
+          </tr>
+        )
     }
-    </tbody>;
-  }
+    </tbody>);
 }
+
 export default TBody;

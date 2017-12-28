@@ -1,80 +1,66 @@
-@import "../../styles/vars";
+@import "../vars";
 
 @size:25px;
-.pageContainer{
-  list-style-type: none;
-  overflow: hidden;
-  display: inline-block;
-  vertical-align: middle;
-  // float: left;
-}
-.normal{
-  float: left;
-  border: 1px solid @border-color-default;
-  margin-right: 10px;
-  cursor: pointer;
-  height: @size;
-  width: @size;
-  text-align: center;
-  line-height: (@size - 2);
-  background:#fff;
-}
-.normal, .current{
-  &:hover{
-    border-color: @color-active;
-    color: @color-active;
+
+.pagination{
+  &-container{
+    list-style-type: none;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
   }
-}
-.disabled{
-  border: 1px solid @border-color-default;
-  color: #d7d7d7;
-  &:hover{
-    border: 1px solid @border-color-default;
-    color: #d7d7d7;
+  &-item, &-current{
+    float: left;
+    border: 1px solid @border-color;
+    margin-right: 10px;
+    cursor: pointer;
+    height: @size;
+    width: @size;
+    text-align: center;
+    line-height: (@size - 2);
+    background: @white-color;
+    color: @font-color-major;
+    &:hover{
+      border-color: shade(@primary-color, 20%);
+      background: shade(@primary-color, 20%);
+      color: @white-color;
+    }
   }
-}
-.current{
-  float: left;
-  border: 1px solid @color-default;
-  margin-right: 10px;
-  cursor: pointer;
-  height: @size;
-  width: @size;
-  text-align: center;
-  line-height: @size;
-  color:@color-default;
-  background:#fff;
-}
-.goTo{
-  // float: left;
-  display: inline-block;
-  vertical-align: middle;
-  font-size: 12px;
-  color: @color-c555;
-  margin-left: 45px;
-  line-height: @size;
-}
-.pageInput{
-  width: 40px;
-  border: 1px solid #ddd;
-  outline: none;
-  margin: 0 10px;
-  text-align: center;
-  &:hover{
-    border: 1px solid #44C0FF;
+  &-current{
+    border-color: @primary-color;
+    background: @primary-color;
+    color: @white-color;
   }
-}
-.pageNum{
-  border: 1px solid @border-color-default;
-  background: #fff;
-  width: 40px;
-  margin: 0 10px;
-  text-align: center;
-  box-sizing: border-box;
-  height: 100%;
-  vertical-align: top;
-  &:hover{
-    border-color: @color-active;
-    color: @color-active;
+
+
+  &-disabled, &-disable:hover{
+    border: 1px solid shade(@border-color, 10%);
+    color: shade(@border-color, 10%);
   }
+
+  &-go{
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 12px;
+    color: @font-color-minor;
+    margin-left: 45px;
+    line-height: @size;
+  }
+  &-input{
+    background-color: @white-color;
+    width: 40px;
+    border: 1px solid @border-color;
+    outline: none;
+    margin: 0 10px;
+    text-align: center;
+    &:hover{
+      border: 1px solid tint(@primary-color, 10%);
+      outline: none;
+    }
+  }
+  &-ok{
+    width: 60px;
+    margin: 0 10px;
+  }
+
 }
