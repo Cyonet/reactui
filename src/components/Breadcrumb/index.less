@@ -1,0 +1,26 @@
+@import "../../styles/vars";
+.breadcrumb{
+  font-size: 12px;
+  line-height: 40px;
+  height: 40px;
+  margin:  0 auto;
+  .item{
+    padding: 0 6px;
+    color: @font-color;
+    //&:last-child{
+    //  font-weight: bolder;
+    //}
+
+  }
+  .link{
+    text-decoration: none;
+    &:hover{
+      color: @color-default;
+    }
+  }
+}
+.separator{
+  font-size: 12px;
+  vertical-align: middle;
+  font-weight: bolder;
+}
