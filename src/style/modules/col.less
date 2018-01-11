@@ -1,35 +1,35 @@
-@__prefix: @col;
+@col__prefix: @col;
 
-.@{__prefix}{
+.@{col__prefix}{
   display: block;
   float: left;
   flex: 0 0 auto;
 }
-.@{__prefix}-flex{
+.@{col__prefix}-flex{
   flex: 0 0 auto;
 }
-.@{__prefix}-pull,.@{__prefix}-push{
+.@{col__prefix}-pull,.@{col__prefix}-push{
   position: relative;
 }
 .generateGrid(@n,@type:~'', @i: @n) when (@i > 0) {
   @width: (@i / @n);
-  .@{__prefix}@{type}-@{i} {
+  .@{col__prefix}@{type}-@{i} {
     width: percentage(@width);
   }
-  .@{__prefix}@{type}-offset-@{i} {
+  .@{col__prefix}@{type}-offset-@{i} {
     margin-left: percentage(@width);
   }
-  .@{__prefix}@{type}-pull-@{i}  {
+  .@{col__prefix}@{type}-pull-@{i}  {
     right: percentage(@width);
   }
-  .@{__prefix}@{type}-push-@{i}  {
+  .@{col__prefix}@{type}-push-@{i}  {
     left: percentage(@width);
   }
   .generateGrid(@n, @type,(@i - 1));
 }
 .generateFlex(@n,@type:~'', @i: @n) when (@i > 0) {
   @width: (@i / @n);
-  .@{__prefix}-flex@{type}-@{i} {
+  .@{col__prefix}-flex@{type}-@{i} {
      flex:@width;
   }
   .generateGrid(@n, @type,(@i - 1));

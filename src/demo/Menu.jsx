@@ -13,7 +13,7 @@ import {
 export default function ButtonDemo() {
   return (
     <div className="demo-cart">
-      <Row type="flex">
+      <Row type="flex" direction="row">
         <Col with={260}>
           <Menu theme="dark">
             <MenuItem name="1">

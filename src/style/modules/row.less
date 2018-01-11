@@ -1,11 +1,11 @@
-@__prefix: @row;
-.@{__prefix},.@{__prefix}-flex{
+@row__prefix: @row;
+.@{row__prefix},.@{row__prefix}-flex{
   box-sizing: border-box;
   margin-left: 0;
   margin-right: 0;
   .clearfix;
 }
-.@{__prefix}{
+.@{row__prefix}{
   position: relative;
   display: block;
   margin-left: 0;
@@ -14,7 +14,7 @@
   zoom: 1;
   .clearfix;
 }
-.@{__prefix}-flex{
+.@{row__prefix}-flex{
   flex: 1;
   display: flex;
   flex-wrap: wrap;
@@ -26,7 +26,7 @@
 @direction: column-reverse, row-reverse, column, row;
 .loopDirection(@len) when (@len > 0) {
   @dir:extract(@direction, @len);
-  .@{__prefix}-@{dir}{
+  .@{row__prefix}-@{dir}{
     flex-direction: @dir;
   }
   .loopDirection((@len - 1));
@@ -37,7 +37,7 @@
 @realJustifies: flex-start, flex-end, center, space-around, space-between;
 .loopJustifies(@len) when (@len > 0) {
   @justify:extract(@justifies, @len);
-  .@{__prefix}-@{justify}{
+  .@{row__prefix}-@{justify}{
     justify-content: extract(@realJustifies, @len);
   }
   .loopJustifies((@len - 1));
@@ -48,7 +48,7 @@
 @realAlign: flex-start, center, flex-end;
 .loopAlign(@len) when (@len > 0) {
   @a:extract(@align, @len);
-  .@{__prefix}-@{a}{
+  .@{row__prefix}-@{a}{
     align-items: extract(@realAlign, @len);
   }
   .loopAlign((@len - 1));
