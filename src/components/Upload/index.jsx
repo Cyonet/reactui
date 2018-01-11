@@ -243,6 +243,7 @@ Upload.propTypes = {
   beforeUpload: PropTypes.func,
   onBeforeUploadSend: PropTypes.func,
   onSuccess: PropTypes.func,
+  onError: PropTypes.func,
   fileList: PropTypes.arrayOf(PropTypes.string),
   max: PropTypes.number,
 };
@@ -258,6 +259,7 @@ Upload.defaultProps = {
   beforeUpload: returnTrue,
   onBeforeUploadSend: noop,
   onSuccess: noop,
+  onError: noop,
   fileList: [],
 };
 
