@@ -1,7 +1,3 @@
-/**
- * Created by black on 2017/6/4.
- */
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';

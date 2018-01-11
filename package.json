@@ -63,6 +63,7 @@
     "react": "^16.1.0",
     "react-dom": "^16.1.0",
     "react-router-dom": "^4.2.2",
-    "react-transition-group": "^2.2.0"
+    "react-transition-group": "^2.2.0",
+    "webuploader": "^0.1.8"
   }
 }
