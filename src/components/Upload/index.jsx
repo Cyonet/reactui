@@ -35,12 +35,18 @@ const getMime = (_extends) => {
 };
 
 function fileEx(file, key, value) {
+  let extend = {};
+  if (typeof key === 'object') {
+    extend = key;
+  } else {
+    extend[key] = value;
+  }
   if (file.self === '@upload/file') {
-    return { ...file, [key]: value };
+    return { ...file, ...extend };
   }
   return {
     file,
-    [key]: value,
+    ...extend,
     id: file.id || uid(),
     self: '@upload/file',
   };
@@ -79,6 +85,7 @@ class Upload extends React.Component {
       fileSingleSizeLimit,
       beforeUpload,
       onSuccess,
+      onError,
       onBeforeUploadSend,
       type,
     } = this.props;
@@ -135,12 +142,32 @@ class Upload extends React.Component {
     });
     // 文件上传成功
     this.uploader.on('uploadSuccess', (file, res) => {
-      if (res.code === '0') {
-        this.setState({filename: `成功上传：${file.name}`})
-        onSuccess(file)
+      if (res.code === '0' || res.responseCode === '0') {
+        const { fileList } = this.state;
+        const fileCahce = fileEx(file, {
+          response: res,
+          percentage: -1,
+        });
+        const list = unique([...fileList, fileCahce]);
+        if (this.isPictureCad()) {
+          this.setState({ fileList: list });
+        } else {
+          this.setState({ file: fileCahce })
+        }
+        onSuccess(fileCahce, list);
       } else {
-        this.setState({failed: true, filename: `上传失败：${file.name}`})
-        onError(res)
+        const { fileList } = this.state;
+        const fileCahce = fileEx(file, {
+          error: true,
+          response: res,
+          percentage: -1,
+        });
+        const list = unique([...fileList, fileCahce]);
+        if (this.isPictureCad()) {
+          this.setState({ fileList: list });
+        } else {
+          this.setState({ file: fileCahce })
+        }
       }
     })
     // 文件上传失败
