@@ -9,7 +9,7 @@ export default class Layout extends React.Component {
   render() {
     return (
       <div className="demo-cart">
-        <Row className="demo-row" direction="row">
+        <Row className="demo-row">
           <Col span={12}>
             <div className="demo-row-red">12</div>
           </Col>
