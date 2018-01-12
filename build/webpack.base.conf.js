@@ -31,6 +31,14 @@ const rules = {
         include: [util.resolve('src'), util.resolve('test')]
       },
       {
+        test: /\.css/,
+        use: ExtractTextPlugin.extract([
+            {
+                loader: 'css-loader'
+            }
+        ])
+      },
+      {
         test: /\.html$/,
         use: {
           loader: 'html-loader',
@@ -41,7 +49,7 @@ const rules = {
         }
       },
       {
-        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        test: /\.(png|jpe?g|gif|svg|swf)(\?.*)?$/,
         loader: 'url-loader',
         options: {
           limit: 10000,

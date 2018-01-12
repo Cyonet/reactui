@@ -13,7 +13,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = merge(baseConf, {
   module: {
     rules: [{
-      test: /\.(less|css)$/,
+      test: /\.less$/,
       exclude: /node_modules/,
       include: [util.resolve('src'), util.resolve('test')],
       use: ExtractTextPlugin.extract({

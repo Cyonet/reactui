@@ -73,7 +73,22 @@ export function isFunction(fn) {
 export function inArray(arr, v) {
   return arr.indexOf(v) > -1;
 }
-
+export function isObjectLike(value) {
+  return typeof value === 'object' && value !== null;
+}
+export function isPlainObject(value) {
+  if (!isObjectLike(value) || Object.prototype.toString.call(value) !== '[object Object]') {
+    return false;
+  }
+  if (Object.getPrototypeOf(value) === null) {
+    return true;
+  }
+  let proto = value;
+  while (Object.getPrototypeOf(proto) !== null) {
+    proto = Object.getPrototypeOf(proto);
+  }
+  return Object.getPrototypeOf(value) === proto;
+}
 export function isNumeric(obj) {
   const type = typeof obj;
   return (type === 'number' || type === 'string') && !win.isNaN(obj - parseFloat(obj));
@@ -87,10 +102,15 @@ export function isNumeric(obj) {
 export function hyphenToCamelcase(str, h = '-') {
   return str.replace(new RegExp(`${h}(\\w)`, 'g'), (all, mactch) => mactch.toUpperCase());
 }
-
+export function is(x, y) {
+  if (x === y) {
+    return (x !== 0 || y !== 0) || (1 / x === 1 / y);
+  }
+  return win.isNaN(x) && win.isNaN(y);
+}
 // 浅比较两个
 export function shallowEqual(a, b) {
-  if (a === b) return true;
+  if (is(a, b)) return true;
   if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) {
     return false;
   }

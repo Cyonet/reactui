@@ -12,7 +12,7 @@ const config = merge(baseConf, {
   entry: [util.resolve('src/index.jsx')],
   module: {
     rules: [{
-      test: /\.(less|css)$/,
+      test: /\.less$/,
       exclude: /node_modules/,
       include: [util.resolve('src'), util.resolve('test')],
       use: ExtractTextPlugin.extract({

@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import WebUploader from 'webuploader';
 import WebUploaderFlash from 'webuploader/dist/Uploader.swf';
-import 'webuploader/dist/webuploader.css';
-import { inArray, noop } from '../../utils/utils';
+import { inArray, noop, isPlainObject } from '../../utils/utils';
 import uid from '../../utils/uid';
+import UploadList from './UploadList';
 
 function returnTrue() {
   return true;
@@ -21,35 +21,28 @@ const MIME_TYPES = {
 const getMime = (_extends) => {
   const mime = [];
   _extends.forEach(extend => {
-    if (extend.match(/png|jpg|jpeg|webp|gif$/)) {
+    if (/png|jpg|jpeg|webp|gif$/.test(extend)) {
       if (!inArray(mime, MIME_TYPES.image)) mime.push(MIME_TYPES.image);
-    } else if (extend.match(/xls(x)?$/)) {
+    } else if (/xls(x)?$/.test(extend)) {
       if (!inArray(mime, MIME_TYPES.excel)) mime.push(MIME_TYPES.excel);
-    } else if (extend.match(/doc(x)?$/)) {
+    } else if (/doc(x)?$/.test(extend)) {
       if (inArray(mime, MIME_TYPES.word)) mime.push(MIME_TYPES.word);
-    } else if (extend.math(/pdf$/)) {
+    } else if (/pdf$/.test(extend)) {
       if (inArray(mime, MIME_TYPES.pdf)) mime.push(MIME_TYPES.pdf);
     }
   });
   return mime.join(',');
 };
 
-function fileEx(file, key, value) {
-  let extend = {};
+function fileEx(file, keys, value) {
+  const cache = file || {};
   if (typeof key === 'object') {
-    extend = key;
-  } else {
-    extend[key] = value;
+    Object.keys(keys).forEach(key => { cache[key] = keys[key]; });
+  } else if (keys) {
+    cache[keys] = value;
   }
-  if (file.self === '@upload/file') {
-    return { ...file, ...extend };
-  }
-  return {
-    file,
-    ...extend,
-    id: file.id || uid(),
-    self: '@upload/file',
-  };
+  cache.id = cache.id || uid();
+  return cache;
 }
 // 去重, 后添加的覆盖前面的
 function unique(fileList) {
@@ -66,7 +59,7 @@ function unique(fileList) {
 
 function format(fileList) {
   const arr = [];
-  fileList.forEach(file => arr.push(fileEx({}, 'url', file)));
+  fileList.forEach(file => arr.push(fileEx({}, { url: file, progress: -2 })));
   return arr;
 }
 class Upload extends React.Component {
@@ -74,7 +67,6 @@ class Upload extends React.Component {
     super(props);
     this.state = {
       fileList: format(props.fileList || []),
-      file: null,
     };
   }
   componentDidMount() {
@@ -84,10 +76,14 @@ class Upload extends React.Component {
       fileSizeLimit,
       fileSingleSizeLimit,
       beforeUpload,
+      onSelect,
       onSuccess,
       onError,
+      auto,
+      onValidateError,
       onBeforeUploadSend,
       type,
+      formData,
     } = this.props;
     const options = {
       swf: WebUploaderFlash,
@@ -101,6 +97,14 @@ class Upload extends React.Component {
         mimeTypes: getMime(fileType),
         extensions: fileType.join(','),
       },
+      thumb: {
+        width: 100,
+        height: 100,
+        quality: 70,
+        allowMagnify: true,
+      },
+      auto,
+      formData,
     };
     if (fileSingleSizeLimit) {
       // 单个文件大小限制
@@ -117,14 +121,15 @@ class Upload extends React.Component {
     this.uploader.reset();
     // 文件上传前回调
     this.uploader.on('beforeFileQueued', (file) => beforeUpload(file));
+    this.uploader.on('fileQueued', (file) => {
+      const { fileList } = this.state;
+      this.setState({ fileList: unique([...fileList, fileEx(file)]) });
+      onSelect(file);
+    });
     // 文件上传开始
     this.uploader.on('startUpload', (file) => {
-      if (this.isPictureCad()) {
-        const { fileList } = this.state;
-        this.setState({ fileList: unique([...fileList, fileEx(file, 'progress', -1)]) });
-      } else {
-        this.setState({ file: fileEx(file, 'progress', -1) })
-      }
+      const { fileList } = this.state;
+      this.setState({ fileList: unique([...fileList, fileEx(file, 'progress', -1)]) });
     });
     // 文件上传前额外参数回调
     this.uploader.on('uploadBeforeSend', (object, data, headers) => {
@@ -133,63 +138,77 @@ class Upload extends React.Component {
     });
     // 文件上传进度
     this.uploader.on('uploadProgress', (file, percentage) => {
-      if (this.isPictureCad()) {
-        const { fileList } = this.state;
-        this.setState({ fileList: unique([...fileList, fileEx(file, 'progress', percentage)]) });
-      } else {
-        this.setState({ file: fileEx(file, 'progress', percentage) })
-      }
+      const { fileList } = this.state;
+      this.setState({ fileList: unique([...fileList, fileEx(file, 'progress', percentage)]) });
     });
     // 文件上传成功
     this.uploader.on('uploadSuccess', (file, res) => {
+      const { fileList } = this.state;
+      const fileCache = fileEx(file, {
+        response: res,
+        percentage: -1,
+      });
+      let list = [];
       if (res.code === '0' || res.responseCode === '0') {
-        const { fileList } = this.state;
-        const fileCahce = fileEx(file, {
-          response: res,
-          percentage: -1,
-        });
-        const list = unique([...fileList, fileCahce]);
-        if (this.isPictureCad()) {
-          this.setState({ fileList: list });
-        } else {
-          this.setState({ file: fileCahce })
-        }
-        onSuccess(fileCahce, list);
+        list = unique([...fileList, fileCache]);
+        onSuccess(fileCache, list);
       } else {
-        const { fileList } = this.state;
-        const fileCahce = fileEx(file, {
-          error: true,
-          response: res,
-          percentage: -1,
-        });
-        const list = unique([...fileList, fileCahce]);
-        if (this.isPictureCad()) {
-          this.setState({ fileList: list });
-        } else {
-          this.setState({ file: fileCahce })
-        }
+        fileCache.error = true;
+        list = unique([...fileList, fileCache]);
+        onError(fileCache, list);
       }
-    })
+      this.setState({ fileList: list });
+    });
     // 文件上传失败
     this.uploader.on('uploadError', (file, status) => {
-      this.setState({failed: true, filename: `上传失败：${file.name}`})
-      onError({code: status, msg: `上传失败，错误代码：${status}`})
-    })
-    // 文件上传完成
-    this.uploader.on('uploadComplete', (file) => {
-      this.setState({progress: -1})
-    })
+      const fileCache = fileEx(file, { error: true, percentage: -1, errMsg: status });
+      const { fileList } = this.state;
+      const list = unique([...fileList, fileCache]);
+      this.setState({ fileList: list });
+      onError(fileCache, list);
+    });
+    // 上传错误, 验证未通过
+    this.uploader.on('error', (error, ...other) => {
+      switch (error) {
+        case 'Q_EXCEED_NUM_LIMIT': // 文件超出个数
+        {
+          onValidateError(`上传文件最多超过${other[0]}个`, other[1], other[0]);
+          break;
+        }
+        case 'Q_EXCEED_SIZE_LIMIT': // 文件大小超限
+        {
+          onValidateError(`文件大小超过${(other[0] / 1024).toFixed(2)}M`, other[1], other[0]);
+          break;
+        }
+        case 'Q_TYPE_DENIED':// 文件类型错误
+        {
+          onValidateError('文件格式错误', other[0]);
+          break;
+        }
+        default:
+        {
+          onValidateError(error, ...other);
+          break;
+        }
+      }
+    });
   }
   componentWillUnmount() {
     if (this.uploader) this.uploader.destroy();
   }
-  _uploadeBegin = () => {
-    const { failed } = this.state;
+  _uploadeBegin = (f) => {
+    const { fileList } = this.state;
     if (!this.uploader) return;
-    if (failed) {
-      this.uploader.retry(this.uploader.getFiles()[0]);
+    if (f) {
+      this.uploader.upload(f);
     } else {
-      this.uploader.upload();
+      fileList.forEach(file => {
+        if (file.error) {
+          this.uploader.retry(file);
+        } else {
+          this.uploader.upload();
+        }
+      });
     }
   }
   _uploadeCancel = () => {
@@ -199,35 +218,89 @@ class Upload extends React.Component {
     const { type } = this.props;
     return type === 'picture-card';
   }
+  handleDelete = () => {
+    // TOOD
+  }
   render() {
-    const { type, children, className } = this.props;
+    const {
+      type,
+      children,
+      className,
+      show,
+      onPreview,
+    } = this.props;
     const { fileList } = this.state;
     if (type === 'picture-card') {
       return (
-        <div className="upload-picture">
-          <div
+        <ul className="upload-picture">
+          {
+            fileList.map(file => (
+              <UploadList
+                file={file}
+                type={type}
+                key={file.id}
+                onDelete={this.handleDelete}
+                onPreview={onPreview}
+              />))
+          }
+          <li
             className="upload-picture-uploader"
             ref={(ref) => { this.node = ref; }}
           >
-            { className }
-          </div>
-        </div>
+            { children }
+          </li>
+        </ul>
       );
     } else if (type === 'drag') {
       return (
-        <div
+        <ul
           className={classNames('upload-drag', className)}
           ref={(ref) => { this.node = ref; }}
         >
-          <span className="upload-drag-inner">
+          <li className="upload-drag-inner">
             {
               children
             }
-          </span>
-        </div>
+          </li>
+          {
+            (
+              show &&
+              (fileList.map(file => (
+                <UploadList
+                  file={file}
+                  type={type}
+                  key={file.id}
+                  onDelete={this.handleDelete}
+                />))
+              )) || null
+          }
+        </ul>
       );
     }
-    return cloneElement(children, { ...children.props, ref: (ref) => { this.node = ref; } });
+    return (
+      <div className="upload">
+        <div className="uploader">
+          { cloneElement(children, { ...children.props, ref: (ref) => { this.node = ref; } }) }
+        </div>
+        {
+          (show &&
+            (
+              <ul className="upload-list">
+                {
+                  fileList.map(file => (
+                    <UploadList
+                      file={file}
+                      type={type}
+                      key={file.id}
+                      onDelete={this.handleDelete}
+                    />))
+                }
+              </ul>
+            )
+          ) || null
+        }
+      </div>
+    );
   }
 }
 
@@ -235,6 +308,7 @@ Upload.propTypes = {
   type: PropTypes.oneOf(['drag', 'picture-card', 'button']),
   auto: PropTypes.bool,
   children: PropTypes.node,
+  show: PropTypes.bool,
   url: PropTypes.string.isRequired,
   className: PropTypes.string,
   fileType: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -244,23 +318,35 @@ Upload.propTypes = {
   onBeforeUploadSend: PropTypes.func,
   onSuccess: PropTypes.func,
   onError: PropTypes.func,
+  onValidateError: PropTypes.func,
+  onSelect: PropTypes.func,
+  onPreview: PropTypes.func,
   fileList: PropTypes.arrayOf(PropTypes.string),
-  max: PropTypes.number,
+  formData: (props, propName, componentName) => {
+    if (!isPlainObject(props[propName])) {
+      return new Error(`Invalid prop${propName}supplied to${componentName}. Validation failed.`);
+    }
+    return false;
+  },
 };
 
 Upload.defaultProps = {
   type: 'button',
   auto: true,
+  show: true,
   children: null,
   className: '',
   fileSizeLimit: 0,
   fileSingleSizeLimit: 0,
-  max: 1,
   beforeUpload: returnTrue,
   onBeforeUploadSend: noop,
+  onSelect: noop,
   onSuccess: noop,
   onError: noop,
+  onValidateError: noop,
+  onPreview: noop,
   fileList: [],
+  formData: {},
 };
 
 export default Upload;

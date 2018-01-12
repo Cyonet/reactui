@@ -14,6 +14,7 @@ import Button from './demo/Button';
 import Icon from './components/Icon';
 import Layout from './demo/Layout';
 import MenuDemo from './demo/Menu';
+import Upload from './demo/Upload';
 
 const Home = () => (
   <div className="main">
@@ -67,6 +68,12 @@ export default class App extends React.Component {
                     Menu 菜单
                   </NavLink>
                 </MenuItem>
+                <MenuItem name="/upload">
+                  <NavLink to="/upload">
+                    <Icon type="cloud-upload-o" />
+                    Upload 上传
+                  </NavLink>
+                </MenuItem>
               </Menu>
             </div>
             <div className="main-container">
@@ -75,6 +82,7 @@ export default class App extends React.Component {
                 <Route exact path="/button" component={Button} />
                 <Route exact path="/menu" component={MenuDemo} />
                 <Route exact path="/layout" component={Layout} />
+                <Route exact path="/upload" component={Upload} />
                 <Redirect from="/btn" to="/button" />
                 <Route exact path="**" component={Not} />
               </Switch>
