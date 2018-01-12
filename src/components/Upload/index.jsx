@@ -1,4 +1,4 @@
-import React, { cloneElement } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import WebUploader from 'webuploader';
@@ -279,8 +279,8 @@ class Upload extends React.Component {
     }
     return (
       <div className="upload">
-        <div className="uploader">
-          { cloneElement(children, { ...children.props, ref: (ref) => { this.node = ref; } }) }
+        <div className="uploader" ref={(ref) => { this.node = ref; }}>
+          { children }
         </div>
         {
           (show &&
