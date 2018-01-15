@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import { noop } from '../../utils/utils';
 import Icon from '../Icon';
 
@@ -16,30 +17,29 @@ class UploadList extends React.Component {
     const { file, type } = this.props;
     if (type === 'picture-card') {
       return (
-        <li className="upload-item upload-picture-card">
+        <li className={classNames('upload-item upload-picture-card', { 'upload-item-error': file.error })}>
           <div className="upload-item-picture">
             {
               (
-                file.progress === -2 &&
-                (<img src={file.url} alt="上传图片" />)
+                (file.thumb || file.url) &&
+                (<img src={file.thumb || file.url} alt="上传图片" />)
               ) ||
               (
                 (
-                  file.progress >= 0 && (
+                  file.percentage >= 0 && (
                     <div className="upload-item-uploading">
                       <span className="upload-uploading_text">文件上传中</span>
                       <div className="upload-progress">
                         <div
                           className="upload-progress-inline"
-                          style={{ width: file.progress <= 0 ? 0 : `${file.progress * 100}%` }}
+                          style={{ width: file.percentage <= 0 ? 0 : `${file.percentage * 100}%` }}
                         />
                       </div>
                     </div>
                   )
                 ) ||
                 (
-                  file.response &&
-                  (<img src={file.url} alt="上传图片" />)
+                  <div className="upload-item-emp" />
                 ) || null
               )
             }

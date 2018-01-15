@@ -8,40 +8,41 @@ import Upload from '../components/Upload';
 import Icon from '../components/Icon';
 
 export default class UploadDemo extends React.Component {
-  url = 'https://secjc.zsteel.cc/cenpur-api/common/fileUpload.do';
-  formData = { token: '123123' };
+  url = 'http://secjc.zsteel.cc/cenpur-api/common/fileUploadForIE.do';
+  formData = { token: 'c71f49f5a7644087b97ccb63165bfbe3' };
   handleDelete = () => {};
 
   render() {
     return (
       <Row type="flex">
-        <Col>
+        <Col style={{ padding: 12 }}>
           <Upload
             url={this.url}
             formData={this.formData}
             type="picture-card"
             fileType={['png', 'jpeg']}
           >
-            <Icon type="cloud-upload-o" />
+            <Icon type="plus" className="demo-upload-icon" />
           </Upload>
         </Col>
-        <Col>
+        <Col style={{ padding: 12 }}>
           <Upload
             url={this.url}
             formData={this.formData}
             fileType={['pdf']}
           >
-            <Button type="primary">上传</Button>
+            <Button width={100} type="primary">上传</Button>
           </Upload>
         </Col>
-        <Col>
+        <Col style={{ padding: 12 }}>
           <Upload
             url={this.url}
             formData={this.formData}
             fileType={['pdf']}
+            type="drag"
           >
-            <div>
-              <Icon type="inbox" />
+            <div className="demo-upload-drag">
+              <Icon type="inbox" className="demo-upload-icon" />
               <p>Click or drag file to this area to upload</p>
             </div>
           </Upload>

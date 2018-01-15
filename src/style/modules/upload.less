@@ -1,1 +1,122 @@
+.webuploader-container {
+	position: relative;
+}
+.webuploader-element-invisible {
+	position: absolute !important;
+	clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px,1px,1px,1px);
+}
+.webuploader-pick {
+	position: relative;
+	cursor: pointer;
+	text-align: center;
+	overflow: hidden;
+  vertical-align: middle;
+}
+.webuploader-pick-disable {
+	opacity: 0.6;
+	pointer-events:none;
+}
+.uploaderBox(){
+  display: inline-table;
+  cursor: pointer;
+  border: 1px dashed shade(@border-color, 5%);
+  transition: border-color 0.3s ease;
+  &>div{
+    display: table-cell;
+    height: 100%;
+    width: 100%;
+  }
+  &:hover{
+    border-color: @primary-color;
+  }
+}
+.upload{
+  &-picture{
+    display: inline-block;
+    list-style: none;
+    font-size: 0;
+    &>li{
+      display: inline-block;
+      width: (@space-base * 16);
+      height: (@space-base * 16);
+      font-size: @font-size;
+      border-radius: 3px;
+      background-color: shade(@white-color, 2%);
+      vertical-align: middle;
+      text-align: center;
+      margin-right: @space-base;
+      margin-bottom: @space-base;
+    }
+    &>&-uploader{
+      .uploaderBox();
+      display: inline-table;
+      margin-right:0;
+      font-size: @font-size-large;
 
+
+    }
+  }
+  &-drag{
+    display: block;
+    &-uploader{
+      display: block;
+      border-radius: 3px;
+      background-color: shade(@white-color, 2%);
+      .uploaderBox();
+      &>div{
+        padding: @spacex3 @spacex6;
+      }
+    }
+    &-list{
+      list-style:none;
+      display: block;
+    }
+  }
+  &-normal{
+    &-list{
+
+    }
+  }
+}
+.upload-item {
+	position: relative;
+	padding: @space-base;
+	&.upload-picture-card {
+    &:hover{
+			.upload-item-action{
+				display: block;
+			}
+		}
+		.upload-item-picture{
+      height: 100%;
+			width: 100%;
+			overflow: hidden;
+			border-radius: 3px;
+			img{
+				width: 100%;
+				vertical-align: top;
+			}
+		}
+	}
+	&.upload-item-error{
+		border: 1px solid @danger-color;
+	}
+	&-action{
+		display: none;
+		cursor: pointer;
+	  .full();
+		background: rgba(0, 0, 0, .6);
+		color: @white-color;
+		transition: all 0.3s;
+		&>i{
+			line-height: 96px;
+			font-size: 20px;
+			padding: 0 12px;
+			&:hover{
+				color: shade(@white-color, 10%);
+				transition: all 0.3s;
+			}
+		}
+	}
+}

@@ -36,7 +36,7 @@ const getMime = (_extends) => {
 
 function fileEx(file, keys, value) {
   const cache = file || {};
-  if (typeof key === 'object') {
+  if (typeof keys === 'object') {
     Object.keys(keys).forEach(key => { cache[key] = keys[key]; });
   } else if (keys) {
     cache[keys] = value;
@@ -50,7 +50,7 @@ function unique(fileList) {
   const json = {};
   for (let i = fileList.length - 1; i >= 0; i--) {
     if (!json[fileList[i].id]) {
-      res.push(fileList[i].id);
+      res.push(fileList[i]);
       json[fileList[i].id] = 1;
     }
   }
@@ -123,14 +123,25 @@ class Upload extends React.Component {
     this.uploader.on('beforeFileQueued', (file) => beforeUpload(file));
     this.uploader.on('fileQueued', (file) => {
       const { fileList } = this.state;
-      this.setState({ fileList: unique([...fileList, fileEx(file)]) });
-      onSelect(file);
+      const cache = fileEx(file, 'percentage', -1);
+      if (this.isPictureCad()) {
+        this.uploader.makeThumb(file, (error, src) => {
+          if (!error) {
+            cache.thumb = src;
+          }
+          this.setState({ fileList: unique([...fileList, cache]) });
+        }, 100, 100);
+      } else {
+        this.setState({ fileList: unique([...fileList, cache]) });
+      }
+      onSelect(cache);
     });
     // 文件上传开始
-    this.uploader.on('startUpload', (file) => {
-      const { fileList } = this.state;
-      this.setState({ fileList: unique([...fileList, fileEx(file, 'progress', -1)]) });
-    });
+    // this.uploader.on('startUpload', (...other) => {
+    //   // const { fileList } = this.state;
+    //   console.info('startUpload', other);
+    //   // this.setState({ fileList: unique([...fileList, fileEx(file, 'progress', -1)]) });
+    // });
     // 文件上传前额外参数回调
     this.uploader.on('uploadBeforeSend', (object, data, headers) => {
       onBeforeUploadSend(object, data, headers);
@@ -139,14 +150,15 @@ class Upload extends React.Component {
     // 文件上传进度
     this.uploader.on('uploadProgress', (file, percentage) => {
       const { fileList } = this.state;
-      this.setState({ fileList: unique([...fileList, fileEx(file, 'progress', percentage)]) });
+      this.setState({ fileList: unique([...fileList, fileEx(file, 'percentage', percentage)]) });
     });
     // 文件上传成功
     this.uploader.on('uploadSuccess', (file, res) => {
+      console.info('uploadSuccess', file);
       const { fileList } = this.state;
       const fileCache = fileEx(file, {
         response: res,
-        percentage: -1,
+        percentage: 1,
       });
       let list = [];
       if (res.code === '0' || res.responseCode === '0') {
@@ -253,39 +265,43 @@ class Upload extends React.Component {
       );
     } else if (type === 'drag') {
       return (
-        <ul
+        <div
           className={classNames('upload-drag', className)}
-          ref={(ref) => { this.node = ref; }}
         >
-          <li className="upload-drag-inner">
+          <div className="upload-drag-uploader" ref={(ref) => { this.node = ref; }}>
             {
               children
             }
-          </li>
+          </div>
           {
             (
               show &&
-              (fileList.map(file => (
-                <UploadList
-                  file={file}
-                  type={type}
-                  key={file.id}
-                  onDelete={this.handleDelete}
-                />))
+              (
+                <ul className="upload-drag-list">
+                  {
+                    fileList.map(file => (
+                      <UploadList
+                        file={file}
+                        type={type}
+                        key={file.id}
+                        onDelete={this.handleDelete}
+                      />))
+                  }
+                </ul>
               )) || null
           }
-        </ul>
+        </div>
       );
     }
     return (
       <div className="upload">
-        <div className="uploader" ref={(ref) => { this.node = ref; }}>
+        <div className="upload-normal" ref={(ref) => { this.node = ref; }}>
           { children }
         </div>
         {
           (show &&
             (
-              <ul className="upload-list">
+              <ul className="upload-normal-list">
                 {
                   fileList.map(file => (
                     <UploadList
