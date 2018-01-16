@@ -21,26 +21,20 @@ class UploadList extends React.Component {
           <div className="upload-item-picture">
             {
               (
-                (file.thumb || file.url) &&
-                (<img src={file.thumb || file.url} alt="上传图片" />)
-              ) ||
-              (
-                (
-                  file.percentage >= 0 && (
-                    <div className="upload-item-uploading">
-                      <span className="upload-uploading_text">文件上传中</span>
-                      <div className="upload-progress">
-                        <div
-                          className="upload-progress-inline"
-                          style={{ width: file.percentage <= 0 ? 0 : `${file.percentage * 100}%` }}
-                        />
-                      </div>
+                file.uploading && (
+                  <div className="upload-item-uploading">
+                    <span className="upload-uploading_text">文件上传中</span>
+                    <div className="upload-progress">
+                      <div
+                        className="upload-progress-inline"
+                        style={{ width: file.percentage <= 0 ? 0 : `${file.percentage * 100}%` }}
+                      />
                     </div>
-                  )
-                ) ||
-                (
-                  <div className="upload-item-emp" />
-                ) || null
+                  </div>
+                )
+              ) || (
+                (<img src={file.thumb || file.url} alt="上传图片" />) ||
+                (<div className="upload-item-emp" />)
               )
             }
           </div>

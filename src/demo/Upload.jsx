@@ -8,7 +8,7 @@ import Upload from '../components/Upload';
 import Icon from '../components/Icon';
 
 export default class UploadDemo extends React.Component {
-  url = 'http://secjc.zsteel.cc/cenpur-api/common/fileUploadForIE.do';
+  url = 'http://2betop.net/fileupload.php';
   formData = { token: 'c71f49f5a7644087b97ccb63165bfbe3' };
   handleDelete = () => {};
 

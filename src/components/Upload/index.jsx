@@ -54,7 +54,7 @@ function unique(fileList) {
       json[fileList[i].id] = 1;
     }
   }
-  return res;
+  return res.reverse();
 }
 
 function format(fileList) {
@@ -66,6 +66,7 @@ class Upload extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      dragUid: uid(),
       fileList: format(props.fileList || []),
     };
   }
@@ -117,13 +118,17 @@ class Upload extends React.Component {
     if (type !== 'picture-card') {
       options.threads = 1;
     }
+    if (type === 'drag') {
+      options.paste = this.node;
+      options.dnd = `#${this.state.dragUid}`;
+    }
     this.uploader = WebUploader.create(options);
     this.uploader.reset();
     // 文件上传前回调
     this.uploader.on('beforeFileQueued', (file) => beforeUpload(file));
     this.uploader.on('fileQueued', (file) => {
       const { fileList } = this.state;
-      const cache = fileEx(file, 'percentage', -1);
+      const cache = fileEx(file, { percentage: -1, uploading: true });
       if (this.isPictureCad()) {
         this.uploader.makeThumb(file, (error, src) => {
           if (!error) {
@@ -154,11 +159,12 @@ class Upload extends React.Component {
     });
     // 文件上传成功
     this.uploader.on('uploadSuccess', (file, res) => {
-      console.info('uploadSuccess', file);
       const { fileList } = this.state;
       const fileCache = fileEx(file, {
         response: res,
         percentage: 1,
+        uploading: false,
+        completed: true,
       });
       let list = [];
       if (res.code === '0' || res.responseCode === '0') {
@@ -173,7 +179,12 @@ class Upload extends React.Component {
     });
     // 文件上传失败
     this.uploader.on('uploadError', (file, status) => {
-      const fileCache = fileEx(file, { error: true, percentage: -1, errMsg: status });
+      const fileCache = fileEx(file, {
+        error: true,
+        percentage: -1,
+        errMsg: status,
+        uploading: false,
+      });
       const { fileList } = this.state;
       const list = unique([...fileList, fileCache]);
       this.setState({ fileList: list });
@@ -266,6 +277,7 @@ class Upload extends React.Component {
     } else if (type === 'drag') {
       return (
         <div
+          id={this.state.dragUid}
           className={classNames('upload-drag', className)}
         >
           <div className="upload-drag-uploader" ref={(ref) => { this.node = ref; }}>
