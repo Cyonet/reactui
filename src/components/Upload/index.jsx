@@ -66,9 +66,10 @@ class Upload extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      dragUid: uid(),
       fileList: format(props.fileList || []),
     };
+    this.dragUid = uid();
+    this.uploaderUid = uid();
   }
   componentDidMount() {
     const {
@@ -120,7 +121,7 @@ class Upload extends React.Component {
     }
     if (type === 'drag') {
       options.paste = this.node;
-      options.dnd = `#${this.state.dragUid}`;
+      options.dnd = `#${this.dragUid}`;
     }
     this.uploader = WebUploader.create(options);
     this.uploader.reset();
@@ -181,7 +182,7 @@ class Upload extends React.Component {
     this.uploader.on('uploadError', (file, status) => {
       const fileCache = fileEx(file, {
         error: true,
-        percentage: -1,
+        percentage: 0.6,
         errMsg: status,
         uploading: false,
       });
@@ -241,8 +242,11 @@ class Upload extends React.Component {
     const { type } = this.props;
     return type === 'picture-card';
   }
-  handleDelete = () => {
-    // TOOD
+  handleDelete = (file) => {
+    const { fileList } = this.state;
+    this.setState({
+      fileList: [...fileList.filter(item => item.id !== file.id)],
+    });
   }
   render() {
     const {
@@ -267,6 +271,7 @@ class Upload extends React.Component {
               />))
           }
           <li
+            key={this.uploaderUid}
             className="upload-picture-uploader"
             ref={(ref) => { this.node = ref; }}
           >
@@ -277,10 +282,15 @@ class Upload extends React.Component {
     } else if (type === 'drag') {
       return (
         <div
-          id={this.state.dragUid}
+          id={this.dragUid}
+          key={this.dragUid}
           className={classNames('upload-drag', className)}
         >
-          <div className="upload-drag-uploader" ref={(ref) => { this.node = ref; }}>
+          <div
+            key={this.uploaderUid}
+            className="upload-drag-uploader"
+            ref={(ref) => { this.node = ref; }}
+          >
             {
               children
             }
@@ -307,7 +317,11 @@ class Upload extends React.Component {
     }
     return (
       <div className="upload">
-        <div className="upload-normal" ref={(ref) => { this.node = ref; }}>
+        <div
+          key={this.uploaderUid}
+          className="upload-normal"
+          ref={(ref) => { this.node = ref; }}
+        >
           { children }
         </div>
         {

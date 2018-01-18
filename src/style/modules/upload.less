@@ -1,3 +1,4 @@
+
 .webuploader-container {
 	position: relative;
 }
@@ -117,6 +118,33 @@
 				color: shade(@white-color, 10%);
 				transition: all 0.3s;
 			}
+		}
+	}
+  &&-inline{
+		.uplpad-type-icon{
+			padding-right: 12px;
+		}
+		.uplpad-close-icon{
+			float: right;
+			cursor: pointer;
+			&:hover{
+				color: @primary-color;
+			}
+		}
+	}
+	.upload-progress{
+    position: absolute;
+		height: 1px;
+		bottom:-1px;
+		left: 0;
+		right: 0;
+		background-color: shade(@white-color, 5%);
+		 transition: all 0.2s;
+		.upload-progress-inline{
+			width: 100%;
+			height: 100%;
+			background-color: @primary-color;
+			 transition: all 0.2s;
 		}
 	}
 }

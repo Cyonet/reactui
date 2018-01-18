@@ -47,15 +47,21 @@ class UploadList extends React.Component {
     }
     return (
       <li className="upload-item upload-item-inline">
-        <Icon type="link" />
+        <Icon className="uplpad-type-icon" type="link" />
         <span className="upload-item-name">{file.name}</span>
-        <Icon type="close" onClick={this.handleDelete} />
-        <div className="upload-progress">
-          <div
-            className="upload-progress-inline"
-            style={{ width: file.progress <= 0 ? 0 : `${file.progress * 100}%` }}
-          />
-        </div>
+        <Icon className="uplpad-close-icon" type="close" onClick={this.handleDelete} />
+        {
+          (
+            file.percentage !== 1 && (
+              <div className="upload-progress">
+                <div
+                  className="upload-progress-inline"
+                  style={{ width: file.percentage <= 0 ? 0 : `${file.percentage * 100}%` }}
+                />
+              </div>
+            )
+          ) || null
+        }
       </li>);
   }
 }

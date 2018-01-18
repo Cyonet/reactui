@@ -19,10 +19,13 @@ export default class UploadDemo extends React.Component {
           <Upload
             url={this.url}
             formData={this.formData}
-            type="picture-card"
-            fileType={['png', 'jpeg']}
+            fileType={['pdf']}
+            type="drag"
           >
-            <Icon type="plus" className="demo-upload-icon" />
+            <div className="demo-upload-drag">
+              <Icon type="inbox" className="demo-upload-icon" />
+              <p>Click or drag file to this area to upload</p>
+            </div>
           </Upload>
         </Col>
         <Col style={{ padding: 12 }}>
@@ -38,13 +41,10 @@ export default class UploadDemo extends React.Component {
           <Upload
             url={this.url}
             formData={this.formData}
-            fileType={['pdf']}
-            type="drag"
+            type="picture-card"
+            fileType={['png', 'jpeg']}
           >
-            <div className="demo-upload-drag">
-              <Icon type="inbox" className="demo-upload-icon" />
-              <p>Click or drag file to this area to upload</p>
-            </div>
+            <Icon type="plus" className="demo-upload-icon" />
           </Upload>
         </Col>
       </Row>
