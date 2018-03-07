@@ -1,4 +1,9 @@
 const win = window || global;
+
+export const NOT_TRUE = false;
+export const TRUE = true;
+export const UNDFINED = undefined;
+export const NULL = null;
 /**
  * 函数节流
  * @fn {function} 回调函数
@@ -16,7 +21,7 @@ export function throttle(fn, time = 200) {
  * 空函数
  * @return {boolean} true
  */
-export function noop() {}
+export function noop(arg) { return arg; }
 /**
  * 判断属性
  * @param  {Object}  obj 操作对象
@@ -55,7 +60,7 @@ export function isArray(arr) {
  * @return {Boolean}        [description]
  */
 export function isEmpty(target) {
-  if (target === undefined || target === null || target === '') return true;
+  if (target === UNDFINED || target === NULL || target === '') return true;
   if (isArray(target)) {
     return target.length === 0;
   }
@@ -69,10 +74,14 @@ export function isEmpty(target) {
 export function isFunction(fn) {
   return !!fn && typeof fn !== 'string' && !fn.nodeName && fn.constructor !== Array && /^[\s[]?function/.test(`${fn}`);
 }
+export function getIndex(arr, v) {
+  return arr.indexOf(v);
+}
 
 export function inArray(arr, v) {
-  return arr.indexOf(v) > -1;
+  return getIndex(arr, v) > -1;
 }
+
 export function isObjectLike(value) {
   return typeof value === 'object' && value !== null;
 }
