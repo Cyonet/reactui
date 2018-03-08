@@ -7,8 +7,10 @@ import {
   noop,
   UNDFINED,
 } from '../../../utils/utils';
-
+import pureDecorator from '../../../utils/pureDecorator';
+@pureDecorator
 export default class RadioGroup extends React.Component {
+  static displayName = 'RadioGroup';
   static defaultProps = {
     defaultValue: UNDFINED,
     value: UNDFINED,

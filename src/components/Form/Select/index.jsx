@@ -1,45 +1,47 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Icon from '../../Icon';
 import trigger from '../../../utils/trigger';
-import FormItemMixin from '../FormItemMixin';
-import PureMixin from '../PureMixin';
-import {inReact, similarArray, isEmpty, isFunction} from 'utils/common';
+import inReact from '../../../utils/inReact';
+import {
+  isEmpty,
+  UNDFINED,
+  TRUE,
+  NOT_TRUE,
+  noop,
+  NULL,
+} from '../../../utils/utils';
+import pureDecorator from '../../../utils/pureDecorator';
 
 function formatOption(props) {
-  if(props.options.length){
+  if (props.options.length) {
     const _ = [...props.options];
     if (props.placeholder) {
       _.unshift({
         value: '',
-        label: props.placeholder
+        label: props.placeholder,
       });
       return _;
     }
   }
   return [];
 }
-@FormItemMixin
-@PureMixin
+@pureDecorator
 export default class Select extends React.Component {
-  displayName = 'select';
+  static displayName = 'Select';
   state = {
     open: false,
-    click: false,
     options: formatOption(this.props),
-    select: {}
+    select: {},
   };
 
   componentDidMount() {
     this.deposit();
-    this.setDefault(this.props, () => {
-      this.setDefaultValue(this.state.select.value);
-    });
+    this.setDefault(this.props);
     this.remove = trigger('click', (pointer) => {
-      if (!inReact(ReactDOM.findDOMNode(this), pointer) && this.state.open) {
-        this.setState({open: false});
+      if (!inReact(this.selectNode, pointer) && this.state.open) {
+        this.setState({ open: false });
       }
     });
   }
@@ -47,179 +49,224 @@ export default class Select extends React.Component {
     if (this.remove) {
       this.remove();
     }
+    this.selectNode = NULL;
   }
   setDefault(props, cd) {
-    const {options, defaultValue, isSearch} = props;
+    const { options, defaultValue, isSearch } = props;
     if (!options || !options.length) return;
-    let _options = [...options];
+    const cache = [...options];
     const callback = () => {
-      const {onChange} = this.props;
-      const {select} = this.state;
-      if (this.props.first) {
-        onChange && onChange(select.value, select, true);
+      const { onChange } = props;
+      const { select } = this.state;
+      if (props.defaultChange) {
+        onChange(select.value, select, true);
       }
-      cd && cd();
+      cd();
     };
-
+    let select;
     if (!isEmpty(defaultValue)) {
-      let select;
-      if(isSearch){
-        select = (_options.filter(item=>(item.value == defaultValue || item.label == defaultValue  || item == defaultValue))[0]||{});
+      if (isSearch) {
+        select = (cache.filter(item => (item.value === defaultValue ||
+          item.label === defaultValue || item === defaultValue))[0] || {});
+      } else {
+        select = (cache.filter(item => (item.value === defaultValue || item === defaultValue))[0] || {});
       }
-      else{
-        select = (_options.filter(item=>(item.value == defaultValue || item == defaultValue))[0]||{});
-      }
-
       select = {
-          value: select.value || defaultValue,
-          label: select.label || defaultValue
+        value: select.value || defaultValue,
+        label: select.label || defaultValue,
       };
-      this.setState({
-        options: _options,
-        select,
-        input:select.label
-      }, () => {
-        callback();
-      });
-    }
-    else {
-      if (this.props.placeholder) {
-        _options.unshift({
+    } else {
+      if (props.placeholder) {
+        cache.unshift({
           value: '',
-          label: this.props.placeholder
+          label: props.placeholder,
         });
       }
-      const item = _options[0];
-      const select = {
-        value: item.value !== void 0 ? item.value : item,
-         label: item.label || item.value || item
+      const item = cache[0];
+      select = {
+        value: item.value !== UNDFINED ? item.value : item,
+        label: item.label || item.value || item,
       };
-      this.setState({
-        options: _options,
-        select,
-        input:select.label
-      }, () => {
-        callback();
-      });
     }
+    this.setState({
+      options: cache,
+      select,
+      input: select.label,
+    }, () => {
+      callback();
+    });
   }
-
-  optionClick = (evt, select) => {
+  isContorl() {
+    return this.props.value !== UNDFINED;
+  }
+  handleOptionClick = (evt, v) => {
     evt.stopPropagation();
-    const {onChange, disabled, isSearch} = this.props;
+    const {
+      onChange,
+      disabled,
+    } = this.props;
     if (disabled) {
       return false;
     }
-    if(typeof select !== 'object'){
+    let select = v;
+    if (typeof v !== 'object') {
       select = {
         value: select,
-        label: select
+        label: select,
       };
-    }
-
-    if (this.hasValue()) {
-      this.setState({
-        open: false,
-      });
     }
     this.setState({
       open: false,
       select,
-      input: select.label
+      input: select.label,
     });
-    this.changeField(select.value);
-    onChange && onChange(select.value, select);
+    onChange(select.value, select);
+    return this;
   }
-
-  selectClick = (evt) => {
+  handleClick = (evt) => {
     evt.stopPropagation();
     if (this.props.disabled) {
       return false;
     }
-    this.setState({open: !this.state.open});
+    this.setState({ open: !this.state.open });
+    return this;
   };
   handleBlur = (e) => {
-    const {format, onChange} = this.props;
-    let value = e.target.value.trim();
-    if(isFunction(format)){
-      value = format(value);
-    }
-    if(value === ''){//输入为空,切换下拉框模式
-      const {options} = this.state;
-      const select = options[0]||{};
-      this.blurField(select.value);
-      this.setState({select, input: select.label});
-    }
-    else{
-      this.blurField(value);
-      const {onChange, disabled} = this.props;
-      onChange && onChange(value, {label:value, value});
-      this.setState({select:{label:value, value}, input: value});
+    const {
+      format,
+      onChange,
+      disabled,
+    } = this.props;
+    if (disabled) return;
+    const value = format(e.target.value.trim());
+    if (isEmpty(value)) { // 输入为空,切换下拉框模式
+      const { options } = this.state;
+      const select = options[0] || {};
+      this.setState({ select, input: select.label });
+    } else {
+      onChange(value, { label: value, value });
+      this.setState({ select: { label: value, value }, input: value });
     }
   }
-
   handleInput = (e) => {
-    let value = e.target.value;
-    //this.blurField(value);
-    this.setState({select:{label:value, value}, input: value});
+    const value = e.target.value.trim();
+    this.setState({ select: { label: value, value }, input: value });
   }
 
   render() {
-    let {select, options, open, input} = this.state;
-    const {disabled, className, value, other, isSearch, size} = this.props;
+    const {
+      select,
+      options,
+      open,
+      input,
+    } = this.state;
+    const {
+      disabled,
+      className,
+      value,
+      search,
+      size,
+      ...other
+    } = this.props;
     let cacheValue = value;
-    if(typeof  cacheValue === 'object'){
+    let selectReal = select;
+    if (typeof cacheValue === 'object') {
       cacheValue = cacheValue.label || cacheValue.value;
     }
-    const __cache = this.hasValue()? cacheValue : (select.value|| '');
-    if (this.hasValue() || !select.label) {
-      select = options.filter(item => item.value == __cache || item == __cache)[0] || {};
+    const selectValue = this.isContorl() ? cacheValue : (select.value || '');
+    if (this.isContorl() || !select.label) {
+      selectReal = options.filter(item => item.value === selectValue || item === selectValue)[0] || {};
     }
-    return <div {...other} onClick={this.selectClick} className={classNames(defaultStyle.warp, className, {
-      [defaultStyle.open]: open,
-      [defaultStyle.disabled]: disabled
-    })}>
-      <div className={classNames(defaultStyle.selection, defaultStyle[`selection-${size}`])}>
+    return (
+      <div
+        {...other}
+        onClick={this.handleClick}
+        ref={(ref) => { this.selectNode = ref; }}
+        className={
+          classNames(
+            'select-warp',
+            className,
+            { 'select-options-open': open, 'select-disabled': disabled },
+        )}
+      >
+        <div
+          className={classNames('select-selection', `select-selection-${size}`)}
+        >
+          {
+            (
+              search &&
+              (
+                <input
+                  type="text"
+                  className="select-selection-search"
+                  value={input}
+                  onChange={this.handleInput}
+                  onBlur={this.handleBlur}
+                />
+              )
+            )
+            || (<div className="select-selection-text">{selectReal.label || selectReal.value}</div>)
+          }
+          <Icon type="down" className="select-arrow" />
+        </div>
         {
-          isSearch && <input
-            type="text"
-            className={defaultStyle.input}
-            value={input}
-            onChange={this.handleInput}
-            onBlur={this.handleBlur}
-          />
-          || <div className={defaultStyle.select}>{select.label || select.value}</div>
+          (!disabled &&
+            (
+              <ul
+                className="select-options"
+              >
+                {
+                  options.map((item) => (
+                    <li
+                      role="option"
+                      aria-selected={(item.value || item) === selectReal.value}
+                      key={item.value || item}
+                      onClick={(e) => this.optionClick(e, item)}
+                      aria-value={item.value !== UNDFINED ? item.value : item}
+                      className={
+                        classNames(
+                          'select-option',
+                          {
+                            'select-option-disabled': item.disabled,
+                            'select-option-active': (item.value || item) === selectReal.value,
+                          },
+                        )
+                      }
+                    >
+                      {item.label || item.value || item}
+                    </li>
+                  ))}
+              </ul>
+            )
+          ) || NULL
         }
-        <Icon type="down" className={defaultStyle.arrow}/>
-      </div>
-      {
-        !disabled && options && options.length && <ul className={defaultStyle.dropdown}>
-          {options.map((item, index) => <li key={index}
-                                            onClick={(e)=>{
-                                              this.optionClick(e, item);
-                                            }}
-                                            value={item.value !== undefined ? item.value : item}
-                                            className={classNames(defaultStyle.option, {
-                                              [defaultStyle.optionDisabled]: item.disabled,
-                                              [defaultStyle.active]: (item.value || item) == select.value
-                                            })}>{item.label || item.value || item}</li>)}
-        </ul> || null
-      }
-    </div>;
+      </div>);
   }
 }
 
 Select.defaultProps = {
-  first: true,
-  isSearch:false,
-  size:'small'
+  defaultChange: TRUE,
+  disabled: NOT_TRUE,
+  search: NOT_TRUE,
+  size: 'small',
+  className: '',
+  placeholder: '',
+  defaultValue: UNDFINED,
+  value: UNDFINED,
+  format: noop,
+  onChange: noop,
 };
 
 Select.propTypes = {
-  first: PropTypes.bool,
-  defaultValue: PropTypes.any,
+  defaultChange: PropTypes.bool,
+  search: PropTypes.bool,
+  className: PropTypes.string,
+  placeholder: PropTypes.string,
+  defaultValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   options: PropTypes.array.isRequired,
-  value: PropTypes.any,
-  isSearch:PropTypes.bool,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  disabled: PropTypes.bool,
   size: PropTypes.oneOf(['large', 'small', 'min', 'xsmall']),
+  format: PropTypes.func,
+  onChange: PropTypes.func,
 };

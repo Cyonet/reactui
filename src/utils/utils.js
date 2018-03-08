@@ -102,6 +102,14 @@ export function isNumeric(obj) {
   const type = typeof obj;
   return (type === 'number' || type === 'string') && !win.isNaN(obj - parseFloat(obj));
 }
+export function formatDouble(fixed = 2) {
+  return (value) => {
+    if (isNumeric(value)) {
+      return +(parseFloat(value) || 0).toFixed(fixed);
+    }
+    return value;
+  };
+}
 /**
  * 将class转换为驼峰
  * @param  {[type]} str     [description]

@@ -22,10 +22,10 @@ export default Component => (class Warpper extends React.Component {
     };
   }
   componentDidMount() {
-    this.getFormItem().setDefaultValue(this.props.defaultValue).deposit(this.reset);
+    this.getFormItem().setDefaultValue(this.props.defaultValue).depositReset(this.reset);
   }
   componentWillUnmount() {
-    this.getFormItem().deposit(noop);
+    this.getFormItem().depositReset(noop);
   }
   getFormItem() {
     return this.context.formItem;
