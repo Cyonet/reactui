@@ -9,18 +9,59 @@ import {
   extract,
   NULL,
   UNDFINED,
+  TRUE,
+  NOT_TRUE,
+  PLAIN_OBJECT,
+  EMPTY_ARRAY,
   noop,
   isFunction,
 } from '../../utils/utils';
 import pureDecorator from '../../utils/pureDecorator';
 
+const PROPS = {
+  error: PropTypes.string,
+  label: PropTypes.string,
+  className: PropTypes.string,
+  align: PropTypes.oneOf(['left', 'center', 'right']),
+  name: PropTypes.string,
+  ruleFlag: PropTypes.any,
+  rules: PropTypes.array,
+  labelWidth: PropTypes.number,
+  component: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+  required: PropTypes.bool,
+  ignore: PropTypes.bool,
+  children: PropTypes.node,
+  htmlFor: PropTypes.string,
+  labelStyle: PropTypes.object,
+  validating: PropTypes.bool,
+  errorClass: PropTypes.string,
+  isShowError: PropTypes.bool,
+  horizontal: PropTypes.bool,
+};
+
+const PROPS_DEFAULT = {
+  className: '',
+  ruleFlag: '',
+  rules: EMPTY_ARRAY,
+  labelWidth: 0,
+  component: NULL,
+  htmlFor: '',
+  name: '',
+  error: '',
+  label: '',
+  align: 'left',
+  required: false,
+  ignore: false,
+  children: NULL,
+  labelStyle: PLAIN_OBJECT,
+  validating: NOT_TRUE,
+  errorClass: '',
+  isShowError: TRUE,
+  horizontal: TRUE,
+};
+
 function computedStyle(props, name = 'width') {
-  const {
-    labelPosition,
-    labelWidth,
-    labelMarginRight,
-    horizontal,
-  } = props;
+  const { labelPosition, labelWidth, labelMarginRight, horizontal } = props;
   const ret = {};
   if (labelPosition === 'top') return ret;
   if (name === 'width' && labelWidth) {
@@ -55,67 +96,44 @@ function ItemRender(props) {
     children,
     ...other
   } = props;
-  const propsNew = extract(other, [
-    'labelPosition',
-    'labelWidth',
-    'labelMarginRight',
-  ]);
+  const propsNew = extract(other, ['labelPosition', 'labelWidth', 'labelMarginRight']);
   return (
     <div
-      className={
-        classNames(
-          'form-item',
-          className,
-          {
-            'form-item-horizontal': horizontal,
-            'form-item-error': !error,
-            'form-item-validating': validating,
-            'form-item-required': required,
-          },
-        )}
+      className={classNames('form-item', className, {
+        'form-item-horizontal': horizontal,
+        'form-item-error': !error,
+        'form-item-validating': validating,
+        'form-item-required': required,
+      })}
       {...propsNew}
     >
-      {
-        (label &&
-        (
-          <label
-            htmlFor={htmlFor}
-            className={
-              classNames(
-                'form-item-label',
-                `form-item-label-${align}`,
-                {
-                  'form-item-label-horizontal': horizontal
-                },
-              )
-            }
-            style={{ ...computedStyle(props), ...labelStyle }}
-          >
-            { label }：
-          </label>
-        )) || NULL
-      }
-      <div
-        className="form-item-content"
-        style={computedStyle(props, 'marginLeft')}
-      >
-        { children }
-        <CSSTransition
-          classNames="fadeUp"
-          timeout={300}
+      {(label && (
+        <label
+          htmlFor={htmlFor}
+          className={classNames('form-item-label', `form-item-label-${align}`, {
+            'form-item-label-horizontal': horizontal,
+          })}
+          style={{ ...computedStyle(props), ...labelStyle }}
         >
-          <p
-            key={isShowError}
-            className={classNames('form-item-error', errorClass)}
-          >
-            { ((isShowError && error) && (<Icon type="exclamation-circle" />)) || NULL }
-            { (isShowError && error) || NULL }
+          {label}：
+        </label>
+      )) ||
+        NULL}
+      <div className="form-item-content" style={computedStyle(props, 'marginLeft')}>
+        {children}
+        <CSSTransition classNames="fadeUp" timeout={300}>
+          <p key={isShowError} className={classNames('form-item-error', errorClass)}>
+            {(isShowError && error && <Icon type="exclamation-circle" />) || NULL}
+            {(isShowError && error) || NULL}
           </p>
         </CSSTransition>
       </div>
     </div>
   );
 }
+
+ItemRender.propTypes = PROPS;
+ItemRender.defaultProps = PROPS_DEFAULT;
 @pureDecorator
 export default class FormItem extends React.Component {
   constructor(props) {
@@ -184,12 +202,12 @@ export default class FormItem extends React.Component {
     return !!this.props.name;
   }
   // onBlur触发
-  blurField = (value) => {
+  blurField = value => {
     this.setValue(value);
     if (this.hasName()) this.validate('blur');
   };
   // onChange触发
-  changeField = (value) => {
+  changeField = value => {
     this.setValue(value);
     this.form().onChange(this.props.name, value);
     setTimeout(() => {
@@ -254,35 +272,16 @@ export default class FormItem extends React.Component {
       validating,
     };
     const Component = this.props.component;
-    return (
-      <Component {...props}>
-        { this.props.children }
-      </Component>
-    );
+    return <Component {...props}>{this.props.children}</Component>;
   }
 }
 FormItem.contextTypes = {
   form: PropTypes.any,
 };
-
+FormItem.propTypes = PROPS;
 FormItem.defaultProps = {
-  required: false,
-  ignore: false,
+  ...PROPS_DEFAULT,
   component: ItemRender,
-  children: NULL,
-};
-FormItem.propTypes = {
-  name: PropTypes.string,
-  ruleFlag: PropTypes.any,
-  rules: PropTypes.array,
-  labelWidth: PropTypes.number,
-  component: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
-  required: PropTypes.bool,
-  ignore: PropTypes.bool,
-  children: PropTypes.node,
-  htmlFor: PropTypes.string,
-  labelStyle: PropTypes.object,
-  align:PropTypes.oneOf(['left', 'center', 'right'])
 };
 FormItem.childContextTypes = {
   formItem: PropTypes.any,

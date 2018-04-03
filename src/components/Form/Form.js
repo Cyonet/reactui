@@ -1,30 +1,65 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import defaultStyles from './index.less';
+import { noop, NULL } from '../../utils/utils';
 
-export default class Form extends React.Component{
-  fields = [];
-  static defaultProps = {
-    labelPosition: 'left',
-    labelAlign:'left',
-    component:'form'
-  };
-  getChildContext(){
-     return {
-       form : this
-     };
+export default class Form extends React.Component {
+  getChildContext() {
+    return { form: this };
   }
-  addField(field){
+  onChange = (name, value) => {
+    const { onChange } = this.props;
+    onChange(name, value);
+  };
+  getFieldsDefaultValue(names) {
+    const cache = {};
+    if (Array.isArray(names)) {
+      this.fields.filter(field => names.indexOf(field.props.name) >= 0).forEach(field => {
+        cache[field.props.name] = field.getDefaultValue() || '';
+      });
+    } else {
+      this.fields.forEach(field => {
+        cache[field.props.name] = field.getDefaultValue() || '';
+      });
+    }
+    return cache;
+  }
+  getFiledValue(name) {
+    if (name) {
+      const field = this.fields.filter(item => item.props.name === name)[0];
+      return field && field.getValue();
+    }
+    return this.getFieldsValue();
+  }
+  getFieldsValue(names) {
+    const cache = {};
+    if (Array.isArray(names)) {
+      this.fields.filter(field => names.indexOf(field.props.name) >= 0).forEach(field => {
+        cache[field.props.name] = field.getValue();
+      });
+    } else {
+      this.fields.forEach(field => {
+        cache[field.props.name] = field.getValue();
+      });
+    }
+    return cache;
+  }
+  fields = [];
+  addField(field) {
     this.fields.push(field);
   }
-  removeField(field){
+  removeField(field) {
     if (field.props.name) {
       this.fields.splice(this.fields.indexOf(field), 1);
     }
   }
-  validate(cd){
-    return new Promise((resolve, reject)=>{
+  resetFields() {
+    this.fields.forEach(field => {
+      field.resetField();
+    });
+  }
+  validate(cd) {
+    return new Promise((resolve, reject) => {
       let valid = true;
       let count = 0;
       if (this.fields.length === 0 && cd) {
@@ -37,86 +72,50 @@ export default class Form extends React.Component{
             valid = false;
           }
           if (++count === this.fields.length) {
-            if(typeof cd === 'function'){ cd(valid);}
-            if(valid){
-              resolve(true);
+            if (typeof cd === 'function') {
+              cd(valid);
             }
-            else{
-              reject(false);
+            if (valid) {
+              resolve(true);
+            } else {
+              reject(new Error(`${field.props.name} validating false`));
             }
           }
         });
       });
-    })
-
-  }
-
-  onChange = (name, value)=> {
-     this.props.onChange && this.props.onChange(name, value);
-  };
-
-  validateField(name, cd){
-    const field = this.fields.filter(field => field.props.name === name)[0];
-    field&&field.validate('', cd);
-  }
-
-  getFiledValue(name){
-    if(name){
-      const field = this.fields.filter(field => field.props.name === name)[0];
-      return field && field.getValue();
-    }
-    else{
-      return this.getFieldsValue();
-    }
-  }
-  getFieldsValue(names){
-    let cache = {};
-    if(Array.isArray(names)){
-      this.fields.filter(field => names.indexOf(field.props.name) >= 0 ).forEach(field=>{
-        cache[field.props.name] = field.getValue();
-      });
-    }
-    else{
-      this.fields.forEach(field=>{
-        cache[field.props.name] = field.getValue();
-      });
-    }
-    return cache;
-  }
-  getFieldsDefaultValue(names){
-    let cache = {};
-    if(Array.isArray(names)){
-      this.fields.filter(field => names.indexOf(field.props.name) >= 0 ).forEach(field=>{
-        cache[field.props.name] = field.getDefaultValue() || '';
-      });
-    }
-    else{
-      this.fields.forEach(field=>{
-        cache[field.props.name] = field.getDefaultValue() || '';
-      });
-    }
-    cache.signType='1';
-    return cache;
-  }
-  resetFields(){
-    this.fields.forEach(field => {
-      field.resetField();
     });
   }
-  render(){
-    const {component} = this.props;
-    const classes = classNames(defaultStyles.form, this.props.className, defaultStyles[`label-text-${this.props.labelAlign}`], defaultStyles[`label-${this.props.labelPosition}`]);
-    return React.createElement(component,{className: classes},this.props.children);
+  validateField(name, cd) {
+    const field = this.fields.filter(item => item.props.name === name)[0];
+    if (field) field.validate('', cd);
+  }
+  render() {
+    const { component, className, children } = this.props;
+    const classes = classNames(
+      'form',
+      className,
+      `label-text-${this.props.labelAlign}`,
+      `label-${this.props.labelPosition}`
+    );
+    return React.createElement(component, { className: classes }, children);
   }
 }
 Form.propTypes = {
   labelPosition: PropTypes.oneOf(['left', 'top', 'inline']),
-  labelAlign:PropTypes.oneOf(['left', 'center', 'right']),
-  component:PropTypes.string,
-  labelWidth:PropTypes.number,
-  labelMarginRight:PropTypes.number,
-  horizontal: PropTypes.bool //form-item是否水平排列
+  labelAlign: PropTypes.oneOf(['left', 'center', 'right']),
+  component: PropTypes.string,
+  className: PropTypes.string,
+  children: PropTypes.node,
+  onChange: PropTypes.func,
+};
+Form.defaultProps = {
+  labelPosition: 'left',
+  labelAlign: 'left',
+  component: 'form',
+  className: '',
+  children: NULL,
+  onChange: noop,
 };
 Form.childContextTypes = {
-  form: PropTypes.any
+  form: PropTypes.any,
 };

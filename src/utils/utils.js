@@ -4,6 +4,8 @@ export const NOT_TRUE = false;
 export const TRUE = true;
 export const UNDFINED = undefined;
 export const NULL = null;
+export const PLAIN_OBJECT = {};
+export const EMPTY_ARRAY = [];
 /**
  * 函数节流
  * @fn {function} 回调函数
