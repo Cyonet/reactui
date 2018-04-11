@@ -1,0 +1,44 @@
+@import '../../vars';
+.form {
+  &.label-text-left {
+    .form-item-label {
+      text-align: left;
+    }
+  }
+  &.label-text-right {
+    .form-item-label {
+      text-align: right;
+    }
+  }
+  &.label-text-center {
+    .form-item-label {
+      text-align: center;
+    }
+  }
+  &.label-top {
+    & .form-item-label {
+      float: none;
+      display: inline-block;
+      text-align: left;
+      padding: 0 0 10px 0;
+    }
+  }
+  &.label-inline {
+    & .form-item {
+      display: inline-block;
+      margin-right: 10px;
+      vertical-align: top;
+    }
+    & .form-item-label {
+      float: none;
+      display: inline-block;
+    }
+    & .form-item-content {
+      display: inline-block;
+      vertical-align: top;
+    }
+  }
+  &.form-label-top .form-item-content {
+    display: block;
+  }
+}

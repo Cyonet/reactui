@@ -1,0 +1,65 @@
+@import '../../vars';
+@import '../../mixins/ellipsis';
+.form-item {
+  display: block;
+  margin-bottom: @spacex4;
+  &.is-error {
+    [data-role='input'],
+    [data-role='input']:hover,
+    [data-role='textarea'],
+    [data-role='textarea']:hover,
+    input[type='radio'] + span,
+    input[type='checkbox'] + span {
+      border-color: @danger-color;
+      border-width: 1px;
+    }
+  }
+  &.is-required {
+    & > .form-item-label:before {
+      content: '*';
+      font-weight: bolder;
+      color: @danger-color;
+      margin-right: 5px;
+    }
+  }
+  &-label {
+    float: left;
+    color: @font-color;
+    line-height: 30px;
+    font-weight: 400;
+    display: block;
+    box-sizing: border-box;
+    font-size: 14px;
+    letter-spacing: 0;
+    .ellipsis;
+    &-center {
+      text-align: center;
+    }
+    &-left {
+      text-align: center;
+    }
+    &-right {
+      text-align: right;
+    }
+  }
+  &-content {
+    position: relative;
+  }
+  &-error {
+    white-space: nowrap;
+    color: @danger-color;
+    font-size: @font-size-small;
+    line-height: 16px;
+    margin-top: 4px;
+    height: 16px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    span {
+      padding-right: 4px;
+    }
+  }
+  &-horizontal {
+    display: inline-block;
+  }
+}
