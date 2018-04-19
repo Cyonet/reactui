@@ -144,7 +144,7 @@ export function shallowEqual(a, b) {
 }
 
 export function pureCompare(instance, nextProps, nextState) {
-  return !shallowEqual(instance.props, nextProps) && !shallowEqual(instance.state, nextState);
+  return !(shallowEqual(instance.props, nextProps) && shallowEqual(instance.state, nextState));
 }
 
 export function toJSON(str) {
