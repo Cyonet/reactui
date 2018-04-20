@@ -9,15 +9,20 @@ export const EMPTY_ARRAY = [];
 /**
  * 函数节流
  * @fn {function} 回调函数
- * @time {number} 时间，毫秒
+ * @delay {number} 时间，毫秒
  * */
-export function throttle(fn, time = 200) {
-  if (throttle.id) {
-    clearTimeout(throttle.id);
-  }
-  throttle.id = setTimeout(() => {
-    fn();
-  }, time);
+export function throttle(fn, delay = 200) {
+  let timeId = null;
+  return function(){
+     const context = this;
+     const args = arguments;
+        if(!function){
+            function = setTimeout(function(){
+               fn.apply(context, args);
+               timeId = null;
+           ,delay);
+        }
+    }
 }
 /**
  * 空函数
